@@ -12,5 +12,6 @@
 hs_err_pid*
 
 # Eclipse files and directories
-.metadata*
-.recommenders*
+.metadata
+.recommenders
+.settings
