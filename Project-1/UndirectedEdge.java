@@ -19,4 +19,8 @@ public class UndirectedEdge {
 		this.a.addEdge(this);
 		this.b.addEdge(this);
 	}
+	
+	public Vertex other(Vertex other) {
+		return other == a ? b : a;
+	}
 }
