@@ -151,11 +151,6 @@ public class MonteCarlo extends Task {
 			builder.append('\n');
 		}
 		System.out.print(builder.toString());
-//		for(SimulationResult result : results) {
-//			System.out.println(result.getV() + "\t" + result.getP() + "\t" + result.getAverageDistance());
-//		}
-//		SimulationResult result = new Simulator(seed, minVertices, maxVertices, vertexGranularity, edgeProbabilityGranularity, numSimulations).simulate();
-//		System.out.println(result.getAverageDistance());
 	}
 
 	private static void usage() {
