@@ -20,10 +20,7 @@ public class Simulation {
 	public SimulationResult simulate() {
 		double average = 0;
 		for(int i = 0; i < n; i++) {
-//			average += prng.nextInt(Integer.MAX_VALUE);
-			if(prng.nextDouble() <= p) {
-				average += prng.nextInt(v);
-			}
+			average += UndirectedGraph.randomGraph(prng, v, p).averageDistance();
 		}
 		average /= n;
 		return new SimulationResult(v, p, average);
