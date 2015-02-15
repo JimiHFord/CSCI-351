@@ -98,8 +98,14 @@ public class MonteCarlo extends Task {
 			nonZeroPositiveInteger(arguments[NUMBER_OF_SIMULATIONS]);
 		}
 		
+		String pMinStr = Double.toString(minP);
+		String pMaxStr = Double.toString(maxP);
 		String pGrainStr = Double.toString(pGrain);
-		final int sigFig = pGrainStr.length() - pGrainStr.indexOf('.') - 1;
+		final int sigFig = 
+				Math.max(Math.max(
+						pGrainStr.length() - pGrainStr.indexOf('.') - 1,
+						pMaxStr.length() - pMaxStr.indexOf('.') - 1),
+						pMinStr.length() - pMinStr.indexOf('.') - 1);
 		int exp = 1;
 		for(int i = 0; i < sigFig; i++) {
 			exp *= 10;
@@ -122,7 +128,7 @@ public class MonteCarlo extends Task {
 		for(int vCount = minVertices; vCount <= maxVertices; vCount += vertexGranularity) {
 			// loop through edgeProbability
 			for(int p = pMin; p <= pMax; p += pInc) {
-				double prob = p / (double) pMax;
+				double prob = p / (double) exp;
 				count += numSimulations;
 				// loop through each simulation
 				results.add(new Simulation(prng, vCount, prob, numSimulations).simulate());
@@ -132,7 +138,7 @@ public class MonteCarlo extends Task {
 		}
 		StringBuilder builder = new StringBuilder();
 		for(int p = pMin; p <= pMax; p += pInc) {
-			builder.append(", " + (p / (double) pMax)); // probabilities across the top
+			builder.append(", " + (p / ((double) exp))); // probabilities across the top
 		}
 		builder.append('\n');
 		for(int v = minVertices; v <= maxVertices; v += vertexGranularity) {
