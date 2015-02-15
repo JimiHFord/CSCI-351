@@ -20,7 +20,7 @@ public class SimulationResultCollection {
 		this.pInc = pInc;
 		this.pExp = pExp;
 		this.rows = (vMax - vMin + vInc) / vInc;
-		this.cols = (pMax - pMin + 1) / pInc;
+		this.cols = (pMax - pMin + pInc) / pInc;
 		this.averages = new double[rows][cols];
 	}
 	
