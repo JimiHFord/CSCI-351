@@ -1,41 +1,51 @@
+import java.util.ArrayList;
+
 import edu.rit.pj2.Task;
+import edu.rit.pj2.Loop;
+import edu.rit.pj2.vbl.DoubleVbl;
+import edu.rit.util.Random;
 
 
 public class MonteCarlo extends Task {
 
 	private static final String[] arguments = {
 		"<seed>",
-		"<min number of vertices>",
-		"<max number of vertices>",
-		"<vertex granularity>",
-		"<edge probability granularity>",
-		"<number of simulations>"
+		"<min_v>",
+		"<max_v>",
+		"<v_grain>",
+		"<min_p>",
+		"<max_p>",
+		"<p_grain>",
+		"<num_simulations>"
 	};
 	
-	private static final int 
+	private static final int // indices 
 		SEED = 0,
 		MIN_VERTICES = 1,
 		MAX_VERTICES = 2,
 		VERTEX_GRANULARITY = 3,
-		EDGE_PROBABILITY_GRANULARITY = 4,
-		NUMBER_OF_SIMULATIONS_INDEX = 5;
+		MIN_P = 4,
+		MAX_P = 5,
+		P_GRANULARITY = 6,
+		NUMBER_OF_SIMULATIONS = 7;
 	
 	@Override
 	public void main(String[] args) {
-		if(args.length != 6) {
+		if(args.length != 8) {
 			usage();
 		}
 		
 		long seed = 0;
 		int minVertices = 0, maxVertices = 0, vertexGranularity = 0, numSimulations = 0;
-		double edgeProbabilityGranularity = 0;
+		double pGrain = 0, minP = 0, maxP = 0;
+		
 		
 		try {
 			seed = Long.parseLong(args[SEED]);
 		} catch (NumberFormatException e) {
 			numericLongInput(arguments[SEED]);
 		}
-		
+//		parallelFor();
 		try {
 			minVertices = Integer.parseInt(args[MIN_VERTICES]);
 			if(minVertices < 1) throw new NumberFormatException();
@@ -59,31 +69,100 @@ public class MonteCarlo extends Task {
 		}
 		
 		try {
-			numSimulations = Integer.parseInt(args[NUMBER_OF_SIMULATIONS_INDEX]);
-			if(numSimulations < 1) throw new NumberFormatException();
+			minP = Double.parseDouble(args[MIN_P]);
+			if(minP < 0 || minP > 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			nonZeroPositiveInteger(arguments[NUMBER_OF_SIMULATIONS_INDEX]);
+			zeroToOneInclusive(arguments[MIN_P]);
 		}
 		
 		try {
-			edgeProbabilityGranularity = Double.parseDouble(args[EDGE_PROBABILITY_GRANULARITY]);
-			if(edgeProbabilityGranularity <= 0 || edgeProbabilityGranularity >= 1) 
-				throw new NumberFormatException();
+			maxP = Double.parseDouble(args[MAX_P]);
+			if(maxP < minP) MonteCarlo.leftGreaterThanOrEqualToRight(arguments[MAX_P], arguments[MIN_P]);
+			if(maxP > 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			zeroToOneExclusive(arguments[EDGE_PROBABILITY_GRANULARITY]);
+			zeroToOneInclusive(arguments[MAX_P]);
 		}
 		
-		new Simulator(seed, minVertices, edgeProbabilityGranularity, numSimulations).simulate();
+		try {
+			pGrain = Double.parseDouble(args[P_GRANULARITY]);
+			if(pGrain <= 0 || pGrain > 1) 
+				throw new NumberFormatException();
+		} catch (NumberFormatException e) {
+			zeroToOneExclusive(arguments[P_GRANULARITY]);
+		}
+		
+		try {
+			numSimulations = Integer.parseInt(args[NUMBER_OF_SIMULATIONS]);
+			if(numSimulations < 1) throw new NumberFormatException();
+		} catch (NumberFormatException e) {
+			nonZeroPositiveInteger(arguments[NUMBER_OF_SIMULATIONS]);
+		}
+		
+		String pGrainStr = Double.toString(pGrain);
+		final int sigFig = pGrainStr.length() - pGrainStr.indexOf('.') - 1;
+		int exp = 1;
+		for(int i = 0; i < sigFig; i++) {
+			exp *= 10;
+		}
+		final int pMax = (int) (Math.round(maxP * exp));
+		final int pMin = (int) (Math.round(minP * exp));
+		final int pInc = (int) (Math.round(pGrain * exp));
+		pGrainStr = null;
+		
+		
+		
+		int count = 0;
+		Random prng = new Random(seed);
+//		ArrayList<SimulationResult> results = new ArrayList<SimulationResult>();
+		
+		SimulationResultCollection results = new SimulationResultCollection(
+				minVertices, maxVertices, vertexGranularity, pMin, pMax, pInc, exp);
+		// loop through number of vertices
+		
+		for(int vCount = minVertices; vCount <= maxVertices; vCount += vertexGranularity) {
+			// loop through edgeProbability
+			for(int p = pMin; p <= pMax; p += pInc) {
+				double prob = p / (double) pMax;
+				count += numSimulations;
+				// loop through each simulation
+				results.add(new Simulation(prng, vCount, prob, numSimulations).simulate());
+				
+//				parallelFor(0, numSimulations - 1).exec(new Simulator(seed, vCount, p, numSimulations, average));
+			}
+		}
+		StringBuilder builder = new StringBuilder();
+		for(int p = pMin; p <= pMax; p += pInc) {
+			builder.append(", " + (p / (double) pMax)); // probabilities across the top
+		}
+		builder.append('\n');
+		for(int v = minVertices; v <= maxVertices; v += vertexGranularity) {
+			
+			builder.append(v + ", ");
+			for(int p = pMin; p <= pMax; p += pInc) {
+				builder.append(results.get(v, p)+", ");
+			}
+			
+			builder.append('\n');
+		}
+		System.out.print(builder.toString());
+//		for(SimulationResult result : results) {
+//			System.out.println(result.getV() + "\t" + result.getP() + "\t" + result.getAverageDistance());
+//		}
+//		SimulationResult result = new Simulator(seed, minVertices, maxVertices, vertexGranularity, edgeProbabilityGranularity, numSimulations).simulate();
+//		System.out.println(result.getAverageDistance());
 	}
 
 	private static void usage() {
-		System.err.printf ("Usage: java pj2 MonteCarlo %1s %2s %3s %4s %5s %6s", 
+		System.err.printf ("Usage: java pj2 MonteCarlo "+
+				"%1s %2s %3s %4s %5s %6s %7s %8s\n", 
 				arguments[SEED],
 				arguments[MIN_VERTICES],
 				arguments[MAX_VERTICES],
 				arguments[VERTEX_GRANULARITY],
-				arguments[EDGE_PROBABILITY_GRANULARITY],
-				arguments[NUMBER_OF_SIMULATIONS_INDEX]);
+				arguments[MIN_P],
+				arguments[MAX_P],
+				arguments[P_GRANULARITY],
+				arguments[NUMBER_OF_SIMULATIONS]);
 		System.exit(1);
 	}
 	
@@ -100,7 +179,12 @@ public class MonteCarlo extends Task {
 	}
 	
 	private static void zeroToOneExclusive(String arg) {
-		System.err.printf("Argument %1s must be numeric and between 0 and 1 exclusive.\n", arg);
+		System.err.printf("Argument %1s must be numeric and between 0 exclusive and 1 inclusive.\n", arg);
+		usage();
+	}
+	
+	private static void zeroToOneInclusive(String arg) {
+		System.err.printf("Argument %1s must be numeric and between 0 inclusive and 1 inclusive.\n", arg);
 		usage();
 	}
 	
