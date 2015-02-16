@@ -131,9 +131,7 @@ public class MonteCarlo extends Task {
 				double prob = p / (double) exp;
 				count += numSimulations;
 				// loop through each simulation
-				results.add(new Simulation(prng, vCount, prob, numSimulations).simulate());
-				
-//				parallelFor(0, numSimulations - 1).exec(new Simulator(seed, vCount, p, numSimulations, average));
+				results.add(new Simulation(this, seed, vCount, prob, numSimulations).simulate());
 			}
 		}
 		StringBuilder builder = new StringBuilder();
