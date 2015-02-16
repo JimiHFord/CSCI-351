@@ -9,8 +9,7 @@ public class UndirectedGraph {
 	private ArrayList<UndirectedEdge> edges;
 	private ArrayList<Vertex> vertices;
 	private int v;
-	private Random prng;
-	
+		
 	// Prevent construction
 	private UndirectedGraph() {
 		
@@ -30,43 +29,32 @@ public class UndirectedGraph {
 	}
 	
 	private int BFS(Vertex start, Vertex goal) {
-		int distance = 0;
-//		procedure BFS(G,v) is
-//		2      create a queue Q
+		int distance = 0, verticesToProcess = 1, uniqueNeighbors = 0;
 		LinkedList<Vertex> queue = new LinkedList<Vertex>();
-//		3      create a set V
 		boolean[] visited = new boolean[v];
-//		4      add v to V
 		visited[start.getN()] = true;
 		Vertex current, t2;
-//		5      enqueue v onto Q
-		queue.addLast(start);
-//		6      while Q is not empty loop
+		queue.add(start);
 		while(!queue.isEmpty()) {
-//		7         t <- Q.dequeue()
 			current = queue.removeFirst();
-//		8         if t is what we are looking for then
 			if(current.equals(goal)) {
-//		9            return t
 				return distance;
-//		10        end if
 			}
-//		11        for all edges e in G.adjacentEdges(t) loop
 			for(int i = 0; i < current.edgeCount(); i++) {
-//		12           u <- G.adjacentVertex(t,e)
 				t2 = current.getEdges().get(i).other(current);
-//		13           if u is not in V then
 				if(!visited[t2.getN()]) {
-//		14               add u to V
 					visited[t2.getN()] = true;
-//		15          enqueue u onto Q
 					queue.add(t2);
-//		16           end if
+					uniqueNeighbors++;
 				}
-//		17        end loop
 			}
-//		18     end loop
-			distance++;
+			verticesToProcess--;
+			if(verticesToProcess <= 0) {
+				verticesToProcess = uniqueNeighbors;
+				uniqueNeighbors = 0;
+				distance++;
+			}
+			
 		}
 		return 0;
 	}
@@ -85,7 +73,6 @@ public class UndirectedGraph {
 		
 	public static UndirectedGraph randomGraph(Random prng, int v, double p) {
 		UndirectedGraph g = new UndirectedGraph(v);
-		g.prng = prng;
 		// loop 
 		UndirectedEdge edge;
 		Vertex a, b;
