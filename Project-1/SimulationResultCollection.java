@@ -44,7 +44,7 @@ public class SimulationResultCollection {
 	}
 	
 	private int row(int v) {
-		return (v - vMin + 1) / vInc;
+		return (v - vMin) / vInc;
 	}
 	
 	private int p(double p) {
