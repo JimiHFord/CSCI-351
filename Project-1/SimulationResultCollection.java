@@ -4,6 +4,7 @@ public class SimulationResultCollection {
 	private double[][] averages;
 	private int rows, cols;
 	
+	@SuppressWarnings("unused")
 	private int vMin, vMax, vInc, pMin, pMax, pInc, pExp;
 
 	private SimulationResultCollection() {

@@ -25,7 +25,6 @@
 
 package edu.rit.crypto;
 
-import edu.rit.util.Hex;
 import edu.rit.util.Packing;
 
 /**

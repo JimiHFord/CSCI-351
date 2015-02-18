@@ -2,6 +2,7 @@
 public class UndirectedEdge {
 
 	private Vertex a, b;
+	@SuppressWarnings("unused")
 	private int id;
 	
 	public UndirectedEdge(int id, Vertex a, Vertex b) {
