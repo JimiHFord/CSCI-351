@@ -26,10 +26,9 @@
 import edu.rit.pj2.Debug;
 import edu.rit.pj2.JarClassLoader;
 import edu.rit.pj2.Job;
-import edu.rit.pj2.Rule;
 import edu.rit.pj2.Schedule;
 import edu.rit.pj2.Task;
-import edu.rit.pj2.TaskSpec;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -498,6 +497,7 @@ public class pj2
 				{
 				// Create instance of task class. This is just to make sure the
 				// task class can be instantiated.
+				@SuppressWarnings("unused")
 				Task task = null;
 				try
 					{
@@ -520,6 +520,7 @@ public class pj2
 				// Set up a single-task Job.
 				job = new Job()
 					{
+					@SuppressWarnings("unchecked")
 					public void main (String[] args)
 						{
 						rule() .task ((Class<Task>) jtclass) .args (taskArgs);

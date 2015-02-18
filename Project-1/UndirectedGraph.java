@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import edu.rit.pj2.vbl.DoubleVbl;
 import edu.rit.util.Random;
 
 
@@ -59,16 +60,24 @@ public class UndirectedGraph {
 		return 0;
 	}
 	
-	public double averageDistance() {
-		double sum = 0;
-		long count = 0;
+//	private double averageDistance() {
+//		double sum = 0;
+//		long count = 0;
+//		for(int i = 0; i < v; i++) {
+//			for(int j = i + 1; j < v; j++) {
+//				sum += BFS(i, j);
+//				count++;
+//			}
+//		}
+//		return  count == 0 ? 0 : sum / count;
+//	}
+	
+	public void accumulateDistances(DoubleVbl.Mean thrLocal) {
 		for(int i = 0; i < v; i++) {
 			for(int j = i + 1; j < v; j++) {
-				sum += BFS(i, j);
-				count++;
+				thrLocal.accumulate(BFS(i, j));
 			}
 		}
-		return  count == 0 ? 0 : sum / count;
 	}
 		
 	public static UndirectedGraph randomGraph(Random prng, int v, double p) {
