@@ -34,7 +34,7 @@ public class Simulation {
 			}
 			@Override
 			public void run(int i) {
-				thrAverage.accumulate(UndirectedGraph.randomGraph(prng, v, p).averageDistance());
+				UndirectedGraph.randomGraph(prng, v, p).accumulateDistances(thrAverage);
 			}
 			
 		});

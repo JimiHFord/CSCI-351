@@ -1,9 +1,4 @@
-import java.util.ArrayList;
-
 import edu.rit.pj2.Task;
-import edu.rit.pj2.Loop;
-import edu.rit.pj2.vbl.DoubleVbl;
-import edu.rit.util.Random;
 
 
 public class MonteCarlo extends Task {
@@ -38,7 +33,6 @@ public class MonteCarlo extends Task {
 		long seed = 0;
 		int minVertices = 0, maxVertices = 0, vertexGranularity = 0, numSimulations = 0;
 		double pGrain = 0, minP = 0, maxP = 0;
-		
 		
 		try {
 			seed = Long.parseLong(args[SEED]);
@@ -116,11 +110,6 @@ public class MonteCarlo extends Task {
 		pGrainStr = null;
 		
 		
-		
-		int count = 0;
-		Random prng = new Random(seed);
-//		ArrayList<SimulationResult> results = new ArrayList<SimulationResult>();
-		
 		SimulationResultCollection results = new SimulationResultCollection(
 				minVertices, maxVertices, vertexGranularity, pMin, pMax, pInc, exp);
 		// loop through number of vertices
@@ -129,7 +118,6 @@ public class MonteCarlo extends Task {
 			// loop through edgeProbability
 			for(int p = pMin; p <= pMax; p += pInc) {
 				double prob = p / (double) exp;
-				count += numSimulations;
 				// loop through each simulation
 				results.add(new Simulation(this, seed, vCount, prob, numSimulations).simulate());
 			}
