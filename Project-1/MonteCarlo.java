@@ -1,3 +1,10 @@
+import java.awt.Color;
+import java.io.File;
+
+import edu.rit.numeric.ListXYSeries;
+import edu.rit.numeric.plot.Dots;
+import edu.rit.numeric.plot.Plot;
+import edu.rit.numeric.plot.Strokes;
 import edu.rit.pj2.Task;
 
 
@@ -11,7 +18,8 @@ public class MonteCarlo extends Task {
 		"<min_p>",
 		"<max_p>",
 		"<p_grain>",
-		"<num_simulations>"
+		"<num_simulations>",
+		"<optional plotfile prefix>"
 	};
 	
 	private static final int // indices 
@@ -22,11 +30,12 @@ public class MonteCarlo extends Task {
 		MIN_P = 4,
 		MAX_P = 5,
 		P_GRANULARITY = 6,
-		NUMBER_OF_SIMULATIONS = 7;
+		NUMBER_OF_SIMULATIONS = 7,
+		PLOT_FILE_PREFIX = 8;
 	
 	@Override
 	public void main(String[] args) {
-		if(args.length != 8) {
+		if(args.length != 8 && args.length != 9) {
 			usage();
 		}
 		
@@ -92,6 +101,9 @@ public class MonteCarlo extends Task {
 			nonZeroPositiveInteger(arguments[NUMBER_OF_SIMULATIONS]);
 		}
 		
+		// store file prefix
+		final String plotFilePrefix = args.length == 9 ? args[PLOT_FILE_PREFIX] : "plot";
+		
 		String pMinStr = Double.toString(minP);
 		String pMaxStr = Double.toString(maxP);
 		String pGrainStr = Double.toString(pGrain);
@@ -112,8 +124,8 @@ public class MonteCarlo extends Task {
 		
 		SimulationResultCollection results = new SimulationResultCollection(
 				minVertices, maxVertices, vertexGranularity, pMin, pMax, pInc, exp);
-		// loop through number of vertices
 		
+		// loop through number of vertices
 		for(int vCount = minVertices; vCount <= maxVertices; vCount += vertexGranularity) {
 			// loop through edgeProbability
 			for(int p = pMin; p <= pMax; p += pInc) {
@@ -121,7 +133,51 @@ public class MonteCarlo extends Task {
 				// loop through each simulation
 				results.add(new Simulation(this, seed, vCount, prob, numSimulations).simulate());
 			}
+			try {
+				
+				File plotFile = new File(fileName);
+				// Plot results
+				ListXYSeries plotResults = new ListXYSeries();
+//				for (int d = 0; d < V; ++ d)
+//		        {
+//			        long count_d = hist.count (d);
+//			        double pr_d = hist.prob (d);
+//			        double expect = hist.expectedProb (d);
+//			        actualSeries.add (d, pr_d);
+//			        expectSeries.add (d, expect);
+//			        System.out.printf ("%d\t%d\t%.5g\t%.5g%n", d, count_d, pr_d, expect);
+//		        }
+				new PlotHandler(plotFilePrefix, results, vCount).write();
+				Plot.write
+					(new Plot()
+			            .plotTitle (String.format
+			               ("Random Graphs, <I>V</I> = %1s", args[1]))
+			            .xAxisTitle ("Edge Probability <I>p</I>")
+//			            .xAxisLength (360)
+			            .yAxisTitle ("pr(<I>d</I>)")
+//			            .yAxisLength (222)
+//			            .yAxisTickFormat (new DecimalFormat ("0.0"))
+//			            .yAxisMajorDivisions (5)
+//			            .seriesDots (null)
+			            .seriesStroke (Strokes.solid (1))
+			            .seriesColor (Color.RED)
+			            .xySeries (expectSeries)
+			            .seriesDots (Dots.circle (5))
+			            .seriesStroke (null)
+			            .xySeries (plotResults),
+			         plotFile);
+				} catch (IOException e) {
+					
+			}
 		}
+		
+		File plotFile = null;
+		try {
+			plotFile = new File(plotFilePrefix);
+		} catch (SecurityException e) {
+			writeAccess(arguments[PLOT_FILE_PREFIX], plotFilePrefix);
+		}
+		
 		StringBuilder builder = new StringBuilder();
 		for(int p = pMin; p <= pMax; p += pInc) {
 			builder.append(", " + (p / ((double) exp))); // probabilities across the top
@@ -141,7 +197,7 @@ public class MonteCarlo extends Task {
 
 	private static void usage() {
 		System.err.printf ("Usage: java pj2 MonteCarlo "+
-				"%1s %2s %3s %4s %5s %6s %7s %8s\n", 
+				"%1s %2s %3s %4s %5s %6s %7s %8s %9s\n", 
 				arguments[SEED],
 				arguments[MIN_VERTICES],
 				arguments[MAX_VERTICES],
@@ -149,7 +205,8 @@ public class MonteCarlo extends Task {
 				arguments[MIN_P],
 				arguments[MAX_P],
 				arguments[P_GRANULARITY],
-				arguments[NUMBER_OF_SIMULATIONS]);
+				arguments[NUMBER_OF_SIMULATIONS],
+				arguments[PLOT_FILE_PREFIX]);
 		System.exit(1);
 	}
 	
@@ -177,6 +234,11 @@ public class MonteCarlo extends Task {
 	
 	private static void leftGreaterThanOrEqualToRight(String left, String right) {
 		System.err.printf("Argument %1s must be greater than or equal to %2s.\n", left, right);
+		usage();
+	}
+	
+	private static void writeAccess(String arg, String prefix) {
+		System.err.printf("Write access denied to %1s using prefix: \"%2s\".\n", arg, prefix);
 		usage();
 	}
 }
