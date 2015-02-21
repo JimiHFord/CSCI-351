@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 
 import edu.rit.numeric.ListXYSeries;
 import edu.rit.numeric.plot.Dots;
@@ -122,6 +123,7 @@ public class MonteCarlo extends Task {
 		pGrainStr = null;
 		
 		
+		
 		SimulationResultCollection results = new SimulationResultCollection(
 				minVertices, maxVertices, vertexGranularity, pMin, pMax, pInc, exp);
 		
@@ -134,65 +136,13 @@ public class MonteCarlo extends Task {
 				results.add(new Simulation(this, seed, vCount, prob, numSimulations).simulate());
 			}
 			try {
-				
-				File plotFile = new File(fileName);
-				// Plot results
-				ListXYSeries plotResults = new ListXYSeries();
-//				for (int d = 0; d < V; ++ d)
-//		        {
-//			        long count_d = hist.count (d);
-//			        double pr_d = hist.prob (d);
-//			        double expect = hist.expectedProb (d);
-//			        actualSeries.add (d, pr_d);
-//			        expectSeries.add (d, expect);
-//			        System.out.printf ("%d\t%d\t%.5g\t%.5g%n", d, count_d, pr_d, expect);
-//		        }
 				new PlotHandler(plotFilePrefix, results, vCount).write();
-				Plot.write
-					(new Plot()
-			            .plotTitle (String.format
-			               ("Random Graphs, <I>V</I> = %1s", args[1]))
-			            .xAxisTitle ("Edge Probability <I>p</I>")
-//			            .xAxisLength (360)
-			            .yAxisTitle ("pr(<I>d</I>)")
-//			            .yAxisLength (222)
-//			            .yAxisTickFormat (new DecimalFormat ("0.0"))
-//			            .yAxisMajorDivisions (5)
-//			            .seriesDots (null)
-			            .seriesStroke (Strokes.solid (1))
-			            .seriesColor (Color.RED)
-			            .xySeries (expectSeries)
-			            .seriesDots (Dots.circle (5))
-			            .seriesStroke (null)
-			            .xySeries (plotResults),
-			         plotFile);
-				} catch (IOException e) {
-					
+			} catch (IOException e) {
+				System.err.println("Error writing file for v="+vCount);	
 			}
 		}
-		
-		File plotFile = null;
-		try {
-			plotFile = new File(plotFilePrefix);
-		} catch (SecurityException e) {
-			writeAccess(arguments[PLOT_FILE_PREFIX], plotFilePrefix);
-		}
-		
-		StringBuilder builder = new StringBuilder();
-		for(int p = pMin; p <= pMax; p += pInc) {
-			builder.append(", " + (p / ((double) exp))); // probabilities across the top
-		}
-		builder.append('\n');
-		for(int v = minVertices; v <= maxVertices; v += vertexGranularity) {
-			
-			builder.append(v + ", ");
-			for(int p = pMin; p <= pMax; p += pInc) {
-				builder.append(results.get(v, p)+", ");
-			}
-			
-			builder.append('\n');
-		}
-		System.out.print(builder.toString());
+		System.out.println("Finished simulations");
+//		for(;;){}
 	}
 
 	private static void usage() {

@@ -4,15 +4,9 @@ public class SimulationResultCollection {
 	private double[][] averages;
 	private int rows, cols;
 	
-	@SuppressWarnings("unused")
-	private int vMin, vMax, vInc, pMin, pMax, pInc, pExp;
+	public final int vMin, vMax, vInc, pMin, pMax, pInc, pExp;
 
-	private SimulationResultCollection() {
-		
-	}
-	
 	public SimulationResultCollection (int vMin, int vMax, int vInc, int pMin, int pMax, int pInc, int pExp) {
-		this();
 		this.vMin = vMin;
 		this.vMax = vMax;
 		this.vInc = vInc;
@@ -25,16 +19,13 @@ public class SimulationResultCollection {
 		this.averages = new double[rows][cols];
 	}
 	
-	@SuppressWarnings("unused")
 	public void add(SimulationResult result) {
 		int p = p(result.getP());
 		int col = col(p);
 		int row = row(result.getV());
-		int x;
 		try {
-		averages[row][col] = result.getAverageDistance();
+			averages[row][col] = result.getAverageDistance();
 		} catch (Exception e) {
-			x = 0;
 		}
 	}
 	
@@ -42,6 +33,10 @@ public class SimulationResultCollection {
 		int row = row(v);
 		int col = col(p);
 		return averages[row][col];
+	}
+	
+	public double[] getAveragesForV(int v) {
+		return averages[row(v)].clone();
 	}
 	
 	private int row(int v) {
