@@ -23,6 +23,7 @@ public class Simulation {
 	
 	
 	public SimulationResult simulate() {
+		// run "n" simulations
 		this.ref.parallelFor(0, n - 1).exec(new Loop() {
 			Random prng;
 			DoubleVbl.Mean thrAverage;
