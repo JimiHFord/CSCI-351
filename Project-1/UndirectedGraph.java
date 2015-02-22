@@ -60,18 +60,6 @@ public class UndirectedGraph {
 		return 0;
 	}
 	
-//	private double averageDistance() {
-//		double sum = 0;
-//		long count = 0;
-//		for(int i = 0; i < v; i++) {
-//			for(int j = i + 1; j < v; j++) {
-//				sum += BFS(i, j);
-//				count++;
-//			}
-//		}
-//		return  count == 0 ? 0 : sum / count;
-//	}
-	
 	public void accumulateDistances(DoubleVbl.Mean thrLocal) {
 		for(int i = 0; i < v; i++) {
 			for(int j = i + 1; j < v; j++) {
@@ -82,7 +70,6 @@ public class UndirectedGraph {
 		
 	public static UndirectedGraph randomGraph(Random prng, int v, double p) {
 		UndirectedGraph g = new UndirectedGraph(v);
-		// loop 
 		UndirectedEdge edge;
 		Vertex a, b;
 		int edgeCount = 0;
