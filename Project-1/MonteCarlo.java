@@ -1,11 +1,5 @@
-import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
 
-import edu.rit.numeric.ListXYSeries;
-import edu.rit.numeric.plot.Dots;
-import edu.rit.numeric.plot.Plot;
-import edu.rit.numeric.plot.Strokes;
 import edu.rit.pj2.Task;
 
 
@@ -141,9 +135,21 @@ public class MonteCarlo extends Task {
 				System.err.println("Error writing file for v="+vCount);	
 			}
 		}
-		System.out.println("Finished simulations");
-//		for(;;){}
-	}
+		StringBuilder builder = new StringBuilder();
+		for(int p = 0; p<= pMax; p+= pInc) {
+			builder.append(", " + (p / ((double) exp)));
+		}
+		builder.append('\n');
+		for(int v = minVertices; v<= maxVertices; v+= vertexGranularity) {
+			builder.append(v + ", ");
+			for(int p = pMin; p <= pMax; p+=pInc) {
+				builder.append(results.get(v,p)+", ");
+			}
+			builder.append('\n');
+		}
+		System.out.println(builder.toString());
+		System.out.println("Finished simulations! run \"java PlotHandler\" followed by any number of .dwg files (that were previously generated) to visualize the results.");
+	} // main
 
 	private static void usage() {
 		System.err.printf ("Usage: java pj2 MonteCarlo "+
@@ -187,8 +193,4 @@ public class MonteCarlo extends Task {
 		usage();
 	}
 	
-	private static void writeAccess(String arg, String prefix) {
-		System.err.printf("Write access denied to %1s using prefix: \"%2s\".\n", arg, prefix);
-		usage();
-	}
 }

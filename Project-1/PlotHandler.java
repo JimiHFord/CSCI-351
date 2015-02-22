@@ -1,12 +1,9 @@
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-
 import edu.rit.numeric.ListXYSeries;
 import edu.rit.numeric.plot.Dots;
 import edu.rit.numeric.plot.Plot;
-import edu.rit.numeric.plot.Strokes;
 
 
 public class PlotHandler {
@@ -23,44 +20,19 @@ public class PlotHandler {
 	public void write() throws IOException {
 		ListXYSeries results = new ListXYSeries();
 		double[] values = collection.getAveragesForV(v);
-		for(int i = 0, p = collection.pMin; i < values.length; i++, p+= collection.pInc) {
-			results.add((double)p / ((double) collection.pExp), values[i]);
+		for(int i = 0, p = collection.pMin; i < values.length; i++, p += collection.pInc) {
+			results.add(p / ((double) collection.pExp), values[i]);
 		}
 		
-//		Plot.write
-//		(new Plot()
-//            .plotTitle (String.format
-//               ("Random Graphs, <I>V</I> = %1s", Integer.toString(v)))
-//            .xAxisTitle ("Edge Probability <I>p</I>")
-////            .xAxisLength (360)
-//            .yAxisTitle ("Average Distance")
-////            .yAxisLength (222)
-////            .yAxisTickFormat (new DecimalFormat ("0.0"))
-////            .yAxisMajorDivisions (5)
-////            .seriesDots (null)
-////            .seriesStroke (Strokes.solid (1))
-////            .seriesColor (Color.RED)
-////            .xySeries (expectSeries)
-//            .seriesDots (Dots.circle (5))
-//            .seriesStroke (null)
-//            .xySeries (results),
-//         new File(fileName));
 		Plot plot = new Plot()
             .plotTitle (String.format
                ("Random Graphs, <I>V</I> = %1s", Integer.toString(v)))
             .xAxisTitle ("Edge Probability <I>p</I>")
             .xAxisTickFormat(new DecimalFormat("0.0"))
-//            .xAxisLength (360)
-            .yAxisTitle ("Average Distance")
-//            .yAxisLength (222)
+            .yAxisTitle ("Average Distance <I>d</I>")
             .yAxisTickFormat (new DecimalFormat ("0.0"))
-//            .yAxisMajorDivisions (5)
-//            .seriesDots (null)
-//            .seriesStroke (Strokes.solid (1))
-//            .seriesColor (Color.RED)
-//            .xySeries (expectSeries)
             .seriesDots (Dots.circle (5))
-            .seriesStroke (null)
+//            .seriesStroke (null)
             .xySeries (results);
 		Plot.write(plot, new File(fileName));
 	}
