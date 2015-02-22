@@ -32,27 +32,30 @@ public class PlotHandler {
             .yAxisTitle ("Average Distance <I>d</I>")
             .yAxisTickFormat (new DecimalFormat ("0.0"))
             .seriesDots (Dots.circle (5))
-//            .seriesStroke (null)
+            .seriesStroke (null)
             .xySeries (results);
 		Plot.write(plot, new File(fileName));
 	}
 	
 	public static void main(String args[]) {
 		if(args.length < 1) {
+			System.err.println("Must specify at least 1 plot file.");
 			usage();
 		}
-		try {
-			for(int i = 0; i < args.length; i++) {
+		
+		for(int i = 0; i < args.length; i++) {
+			try {
 				Plot plot = Plot.read(args[i]);
 				plot.getFrame().setVisible(true);
+			} catch (ClassNotFoundException e) {
+				System.err.println("Could not deserialize " + args[i]);
+//				usage();
+			} catch (IOException e) {
+				System.err.println("Could not open " + args[i]);
+//				usage();
 			}
-		} catch (ClassNotFoundException e) {
-			System.err.println("Could not deserialize plot file.");
-			usage();
-		} catch (IOException e) {
-			System.err.println("Could not open " + args[0]);
-			usage();
 		}
+		
 	}
 	
 	private static void usage() {
