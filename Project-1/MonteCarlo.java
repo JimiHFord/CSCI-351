@@ -1,4 +1,6 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import edu.rit.pj2.Task;
 
@@ -43,7 +45,7 @@ public class MonteCarlo extends Task {
 		} catch (NumberFormatException e) {
 			numericLongInput(arguments[SEED]);
 		}
-//		parallelFor();
+
 		try {
 			minVertices = Integer.parseInt(args[MIN_VERTICES]);
 			if(minVertices < 1) throw new NumberFormatException();
@@ -147,7 +149,16 @@ public class MonteCarlo extends Task {
 			}
 			builder.append('\n');
 		}
-		System.out.println(builder.toString());
+		PrintWriter tableWriter = null;
+		try {
+			tableWriter = new PrintWriter(plotFilePrefix + "-table.csv");
+			tableWriter.print(builder.toString());
+		} catch (FileNotFoundException e) {
+			System.err.println("Error writing table data to file \""+ plotFilePrefix + "-table.csv\"");
+		} finally {
+			if(tableWriter != null) tableWriter.close();
+		}
+//		System.out.println(builder.toString());
 		System.out.println("Finished simulations! run \"java PlotHandler\" followed by any number of .dwg files (that were previously generated) to visualize the results.");
 	} // main
 
