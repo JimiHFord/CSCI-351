@@ -20,11 +20,11 @@ public class SimulationResultCollection {
 	}
 	
 	public void add(SimulationResult result) {
-		int p = p(result.getP());
+		int p = p(result.p);
 		int col = col(p);
-		int row = row(result.getV());
+		int row = row(result.v);
 		try {
-			averages[row][col] = result.getAverageDistance();
+			averages[row][col] = result.averageDistance;
 		} catch (Exception e) {
 		}
 	}

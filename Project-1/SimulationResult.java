@@ -1,8 +1,8 @@
 
 public class SimulationResult {
 
-	private double averageDistance, p;
-	private int v;
+	public final double averageDistance, p;
+	public final int v;
 	
 	public SimulationResult(int v, double p, double averageDistance) {
 		this.averageDistance = averageDistance;
@@ -10,15 +10,4 @@ public class SimulationResult {
 		this.p = p;
 	}
 	
-	public double getAverageDistance() {
-		return this.averageDistance;
-	}
-	
-	public double getP() {
-		return p;
-	}
-	
-	public int getV() {
-		return v;
-	}
 }
