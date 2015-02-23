@@ -24,6 +24,7 @@ import edu.rit.numeric.plot.Plot;
  */
 public class PlotHandler {
 
+	// private data members
 	private final String fileName;
 	private final int v;
 	private final SimulationResultCollection collection;
@@ -47,15 +48,6 @@ public class PlotHandler {
 		this.p = 0;
 		this.collection = collection;
 		vertexMode = true;
-	}
-	
-	public PlotHandler(String plotFilePrefix,
-			SimulationResultCollection collection, double p) {
-		fileName = plotFilePrefix + "-p-" + p + ".dwg";
-		this.v = 0;
-		this.p = p;
-		this.collection = collection;
-		vertexMode = false;
 	}
 	
 	/**
@@ -109,7 +101,9 @@ public class PlotHandler {
 		
 	}
 	
-	// Private helper method
+	/**
+	 * Print the usage message for this program and gracefully exit.
+	 */
 	private static void usage() {
 		System.err.println("usage: java PlotHandler <plot-file-1> (<plot-file-2> <plot-file-3>... etc.)");
 		System.exit(1);
