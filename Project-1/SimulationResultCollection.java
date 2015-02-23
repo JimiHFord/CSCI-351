@@ -76,7 +76,8 @@ public class SimulationResultCollection {
 	 * @param pExp The number of decimal places used to convert the edge
 	 * 			   probability into an integer
 	 */
-	public SimulationResultCollection (int vMin, int vMax, int vInc, int pMin, int pMax, int pInc, int pExp) {
+	public SimulationResultCollection (int vMin, int vMax, int vInc, 
+			int pMin, int pMax, int pInc, int pExp) {
 		this.vMin = vMin;
 		this.vMax = vMax;
 		this.vInc = vInc;

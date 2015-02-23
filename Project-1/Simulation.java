@@ -70,7 +70,8 @@ public class Simulation {
 			
 			@Override
 			public void run(int i) {
-				UndirectedGraph.randomGraph(prng, v, p).accumulateDistances(thrAverage);
+				UndirectedGraph.randomGraph(prng, v, p).
+					accumulateDistances(thrAverage);
 			}
 			
 		});
