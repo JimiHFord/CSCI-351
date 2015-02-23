@@ -75,7 +75,7 @@ public class Simulation {
 			}
 			
 		});
-		
-		return new SimulationResult(v, p, average.doubleValue());
+		double result = average.doubleValue();
+		return new SimulationResult(v, p, result == Double.NaN ? 0 : result);
 	}
 }
