@@ -31,8 +31,6 @@ public class PlotHandler {
 	private final String fileName;
 	private final int v;
 	private final SimulationResultCollection collection;
-	private final boolean vertexMode;
-	private final double p;
 	
 	/**
 	 * Construct a new plot handler that plots average distances for a fixed
@@ -48,9 +46,7 @@ public class PlotHandler {
 			SimulationResultCollection collection, int v) {
 		fileName = plotFilePrefix + "-V-" + v + ".dwg";
 		this.v = v;
-		this.p = 0;
 		this.collection = collection;
-		vertexMode = true;
 	}
 	
 	/**

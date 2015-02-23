@@ -76,13 +76,15 @@ public class MonteCarlo extends Task {
 		}
 		
 		long seed = 0;
-		int minVertices = 0, maxVertices = 0, vertexGranularity = 0, numSimulations = 0;
+		int minVertices = 0, maxVertices = 0, vertexGranularity = 0, 
+				numSimulations = 0;
 		double pGrain = 0, minP = 0, maxP = 0;
 		
 		try {
 			seed = Long.parseLong(args[SEED]);
 		} catch (NumberFormatException e) {
-			displayError(String.format("Argument %1s must be numeric and between %2d "+
+			displayError(
+					String.format("Argument %1s must be numeric and between %2d "+
 					"and %3d inclusive.\n", arguments[SEED],
 				Long.MIN_VALUE, Long.MAX_VALUE));
 		}
@@ -91,17 +93,21 @@ public class MonteCarlo extends Task {
 			minVertices = Integer.parseInt(args[MIN_VERTICES]);
 			if(minVertices < 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			displayError(String.format("Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
-				arguments[MIN_VERTICES], Integer.MAX_VALUE));
+			displayError(
+				String.format("Argument %1s must be numeric and between 1 "+
+						"and %2d inclusive.\n", arguments[MIN_VERTICES], 
+						Integer.MAX_VALUE));
 		}
 		
 		try {
 			maxVertices = Integer.parseInt(args[MAX_VERTICES]);
 			if(maxVertices < minVertices)
-				displayError(String.format("Argument %1s must be greater than or equal to %2s.\n",
+				displayError(String.format(
+					"Argument %1s must be greater than or equal to %2s.\n",
 					arguments[MAX_VERTICES], arguments[MIN_VERTICES]));
 		} catch (NumberFormatException e) {
-			displayError(String.format("Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
+			displayError(String.format(
+				"Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
 					arguments[MAX_VERTICES], Integer.MAX_VALUE));
 		}
 		
@@ -109,7 +115,8 @@ public class MonteCarlo extends Task {
 			vertexGranularity = Integer.parseInt(args[VERTEX_GRANULARITY]);
 			if(vertexGranularity < 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			displayError(String.format("Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
+			displayError(String.format(
+				"Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
 					arguments[VERTEX_GRANULARITY], Integer.MAX_VALUE));
 		}
 		
@@ -117,18 +124,23 @@ public class MonteCarlo extends Task {
 			minP = Double.parseDouble(args[MIN_P]);
 			if(minP < 0 || minP > 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			displayError(String.format("Argument %1s must be numeric and between 0 inclusive and 1 inclusive.\n", 
+			displayError(String.format(
+					"Argument %1s must be numeric and between "+
+					"0 inclusive and 1 inclusive.\n", 
 					arguments[MIN_P]));
 		}
 		
 		try {
 			maxP = Double.parseDouble(args[MAX_P]);
 			if(maxP < minP)
-				displayError(String.format("Argument %1s must be greater than or equal to %2s.\n", 
+				displayError(String.format(
+						"Argument %1s must be greater than or equal to %2s.\n", 
 						arguments[MAX_P], arguments[MIN_P]));
 			if(maxP > 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			displayError(String.format("Argument %1s must be numeric and between 0 inclusive and 1 inclusive.\n",
+			displayError(String.format(
+				"Argument %1s must be numeric and between "+
+				"0 inclusive and 1 inclusive.\n",
 					arguments[MAX_P]));
 		}
 		
@@ -137,7 +149,9 @@ public class MonteCarlo extends Task {
 			if(pGrain <= 0 || pGrain > 1) 
 				throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			displayError(String.format("Argument %1s must be numeric and between 0 exclusive and 1 inclusive.\n", 
+			displayError(String.format(
+				"Argument %1s must be numeric and between "+
+				"0 exclusive and 1 inclusive.\n", 
 					arguments[P_GRANULARITY]));
 		}
 		
@@ -145,12 +159,14 @@ public class MonteCarlo extends Task {
 			numSimulations = Integer.parseInt(args[NUMBER_OF_SIMULATIONS]);
 			if(numSimulations < 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			displayError(String.format("Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
+			displayError(String.format(
+				"Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
 					arguments[NUMBER_OF_SIMULATIONS], Integer.MAX_VALUE));
 		}
 		
 		// store file prefix
-		final String plotFilePrefix = args.length == 9 ? args[PLOT_FILE_PREFIX] : "plot";
+		final String plotFilePrefix = args.length == 9 ? 
+				args[PLOT_FILE_PREFIX] : "plot";
 		
 		String pMinStr = Double.toString(minP);
 		String pMaxStr = Double.toString(maxP);
@@ -175,12 +191,14 @@ public class MonteCarlo extends Task {
 				minVertices, maxVertices, vertexGranularity, pMin, pMax, pInc, exp);
 		
 		// loop through number of vertices
-		for(int vCount = minVertices; vCount <= maxVertices; vCount += vertexGranularity) {
+		for(int vCount = minVertices; vCount <= maxVertices; 
+				vCount += vertexGranularity) {
 			// loop through edgeProbability
 			for(int p = pMin; p <= pMax; p += pInc) {
 				double prob = p / (double) exp;
 				// loop through each simulation
-				results.add(new Simulation(this, seed, vCount, prob, numSimulations).simulate());
+				results.add(new Simulation(this, seed, vCount, prob, 
+						numSimulations).simulate());
 			}
 			try {
 				new PlotHandler(plotFilePrefix, results, vCount).write();
@@ -188,13 +206,7 @@ public class MonteCarlo extends Task {
 				System.err.println("Error writing file for v="+vCount);	
 			}
 		}
-		
-//		try {
-//			new PlotHandler(plotFilePrefix, results, .25).write();
-//		} catch (IOException e) {
-//			System.err.println("Error writing file for p="+.25);	
-//		}
-		
+				
 		StringBuilder builder = new StringBuilder();
 		for(int p = 0; p<= pMax; p+= pInc) {
 			builder.append(", " + (p / ((double) exp)));
@@ -213,11 +225,14 @@ public class MonteCarlo extends Task {
 			tableWriter = new PrintWriter(plotFilePrefix + tableSuffix);
 			tableWriter.print(builder.toString());
 		} catch (FileNotFoundException e) {
-			System.err.println("Error writing table data to file \""+ plotFilePrefix + tableSuffix +"\"");
+			System.err.println("Error writing table data to file \""+ 
+				plotFilePrefix + tableSuffix +"\"");
 		} finally {
 			if(tableWriter != null) tableWriter.close();
 		}
-		System.out.println("Finished simulations! run \"java PlotHandler\" followed by any number of .dwg files (that were previously generated) to visualize the results.");
+		System.out.println("Finished simulations! run \"java PlotHandler\" "+
+		"followed by any number of .dwg files (that were previously generated) "+
+		"to visualize the results.");
 	} // main
 
 
