@@ -1,9 +1,24 @@
+//******************************************************************************
+//
+// File:    Simulation.java
+// Package: ---
+// Unit:    Class Simulation
+//
+//******************************************************************************
+
 import edu.rit.pj2.Loop;
 import edu.rit.pj2.Task;
 import edu.rit.pj2.vbl.DoubleVbl;
 import edu.rit.util.Random;
 
-
+/**
+ * Class Simulation takes the necessary input to run a specified number of
+ * simulations generating random graphs and averaging the distance over all
+ * the graphs.
+ * 
+ * @author  Jimi Ford
+ * @version 2-15-2015
+ */
 public class Simulation {
 
 	private int v, n;
@@ -33,7 +48,9 @@ public class Simulation {
 	
 	/**
 	 * Loop through the <I>n</I> simulations and accumulate the distances 
-	 * between each pair of vertices.
+	 * between each pair of vertices. The looping in this method is where
+	 * most of the computation takes place, so to combat this, a parallel
+	 * loop is used.
 	 * 
 	 * @return the results of the <I>n</I> simulations
 	 */
