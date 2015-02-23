@@ -82,44 +82,54 @@ public class MonteCarlo extends Task {
 		try {
 			seed = Long.parseLong(args[SEED]);
 		} catch (NumberFormatException e) {
-			numericLongInput(arguments[SEED]);
+			displayError(String.format("Argument %1s must be numeric and between %2d "+
+					"and %3d inclusive.\n", arguments[SEED],
+				Long.MIN_VALUE, Long.MAX_VALUE));
 		}
 
 		try {
 			minVertices = Integer.parseInt(args[MIN_VERTICES]);
 			if(minVertices < 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			nonZeroPositiveInteger(arguments[MIN_VERTICES]);
+			displayError(String.format("Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
+				arguments[MIN_VERTICES], Integer.MAX_VALUE));
 		}
 		
 		try {
 			maxVertices = Integer.parseInt(args[MAX_VERTICES]);
-			if(maxVertices < minVertices) leftGreaterThanOrEqualToRight(
-					arguments[MAX_VERTICES], arguments[MIN_VERTICES]);
+			if(maxVertices < minVertices)
+				displayError(String.format("Argument %1s must be greater than or equal to %2s.\n",
+					arguments[MAX_VERTICES], arguments[MIN_VERTICES]));
 		} catch (NumberFormatException e) {
-			nonZeroPositiveInteger(arguments[MAX_VERTICES]);
+			displayError(String.format("Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
+					arguments[MAX_VERTICES], Integer.MAX_VALUE));
 		}
 		
 		try {
 			vertexGranularity = Integer.parseInt(args[VERTEX_GRANULARITY]);
 			if(vertexGranularity < 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			nonZeroPositiveInteger(arguments[VERTEX_GRANULARITY]);
+			displayError(String.format("Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
+					arguments[VERTEX_GRANULARITY], Integer.MAX_VALUE));
 		}
 		
 		try {
 			minP = Double.parseDouble(args[MIN_P]);
 			if(minP < 0 || minP > 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			zeroToOneInclusive(arguments[MIN_P]);
+			displayError(String.format("Argument %1s must be numeric and between 0 inclusive and 1 inclusive.\n", 
+					arguments[MIN_P]));
 		}
 		
 		try {
 			maxP = Double.parseDouble(args[MAX_P]);
-			if(maxP < minP) MonteCarlo.leftGreaterThanOrEqualToRight(arguments[MAX_P], arguments[MIN_P]);
+			if(maxP < minP)
+				displayError(String.format("Argument %1s must be greater than or equal to %2s.\n", 
+						arguments[MAX_P], arguments[MIN_P]));
 			if(maxP > 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			zeroToOneInclusive(arguments[MAX_P]);
+			displayError(String.format("Argument %1s must be numeric and between 0 inclusive and 1 inclusive.\n",
+					arguments[MAX_P]));
 		}
 		
 		try {
@@ -127,14 +137,16 @@ public class MonteCarlo extends Task {
 			if(pGrain <= 0 || pGrain > 1) 
 				throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			zeroToOneExclusive(arguments[P_GRANULARITY]);
+			displayError(String.format("Argument %1s must be numeric and between 0 exclusive and 1 inclusive.\n", 
+					arguments[P_GRANULARITY]));
 		}
 		
 		try {
 			numSimulations = Integer.parseInt(args[NUMBER_OF_SIMULATIONS]);
 			if(numSimulations < 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
-			nonZeroPositiveInteger(arguments[NUMBER_OF_SIMULATIONS]);
+			displayError(String.format("Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
+					arguments[NUMBER_OF_SIMULATIONS], Integer.MAX_VALUE));
 		}
 		
 		// store file prefix
@@ -208,7 +220,10 @@ public class MonteCarlo extends Task {
 		System.out.println("Finished simulations! run \"java PlotHandler\" followed by any number of .dwg files (that were previously generated) to visualize the results.");
 	} // main
 
-	// Private helper methods
+
+	/**
+	 * Display the proper usage of this program and exit.
+	 */
 	private static void usage() {
 		System.err.printf ("Usage: java pj2 MonteCarlo "+
 				"%1s %2s %3s %4s %5s %6s %7s %8s %9s\n", 
@@ -224,31 +239,12 @@ public class MonteCarlo extends Task {
 		System.exit(1);
 	}
 	
-	private static void nonZeroPositiveInteger(String arg) {
-		System.err.printf("Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
-				arg, Integer.MAX_VALUE);
+	/**
+	 * Print an error message to System.err and gracefully exit
+	 * @param msg the error message to display
+	 */
+	private static void displayError(String msg) {
+		System.err.println(msg);
 		usage();
 	}
-	
-	private static void numericLongInput(String arg) {
-		System.err.printf("Argument %1s must be numeric and between %2d and %3d inclusive.\n", arg,
-				Long.MIN_VALUE, Long.MAX_VALUE);
-		usage();
-	}
-	
-	private static void zeroToOneExclusive(String arg) {
-		System.err.printf("Argument %1s must be numeric and between 0 exclusive and 1 inclusive.\n", arg);
-		usage();
-	}
-	
-	private static void zeroToOneInclusive(String arg) {
-		System.err.printf("Argument %1s must be numeric and between 0 inclusive and 1 inclusive.\n", arg);
-		usage();
-	}
-	
-	private static void leftGreaterThanOrEqualToRight(String left, String right) {
-		System.err.printf("Argument %1s must be greater than or equal to %2s.\n", left, right);
-		usage();
-	}
-	
 }
