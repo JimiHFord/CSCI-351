@@ -58,7 +58,8 @@ public class PlotHandler {
 	public void write() throws IOException {
 		ListXYSeries results = new ListXYSeries();
 		double[] values = collection.getAveragesForV(v);
-		for(int i = 0, p = collection.pMin; i < values.length; i++, p += collection.pInc) {
+		for(int i = 0, p = collection.pMin; i < values.length; i++, 
+				p += collection.pInc) {
 			results.add(p / ((double) collection.pExp), values[i]);
 		}
 		
@@ -104,7 +105,8 @@ public class PlotHandler {
 	 * Print the usage message for this program and gracefully exit.
 	 */
 	private static void usage() {
-		System.err.println("usage: java PlotHandler <plot-file-1> (<plot-file-2> <plot-file-3>... etc.)");
+		System.err.println("usage: java PlotHandler <plot-file-1> "+
+				"(<plot-file-2> <plot-file-3>... etc.)");
 		System.exit(1);
 	}
 }
