@@ -1,12 +1,25 @@
+//******************************************************************************
+//
+// File:    UndirectedGraph.java
+// Package: ---
+// Unit:    Class UndirectedGraph
+//
+//******************************************************************************
+
 import java.util.ArrayList;
 import java.util.LinkedList;
-
 import edu.rit.pj2.vbl.DoubleVbl;
 import edu.rit.util.Random;
 
-
+/**
+ * 
+ * 
+ * @author Jimi Ford
+ * @version 2-15-2015
+ */
 public class UndirectedGraph {
 
+	// private data members
 	private ArrayList<UndirectedEdge> edges;
 	private ArrayList<Vertex> vertices;
 	private int v;
@@ -16,6 +29,11 @@ public class UndirectedGraph {
 		
 	}
 	
+	/**
+	 * Private constructor used internally by the static random graph
+	 * method
+	 * @param v the number of vertices in the graph
+	 */
 	private UndirectedGraph(int v) {
 		this.v = v;
 		vertices = new ArrayList<Vertex>(v);

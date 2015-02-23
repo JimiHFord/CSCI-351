@@ -34,6 +34,7 @@ import edu.rit.pj2.Task;
  */
 public class MonteCarlo extends Task {
 
+	// Private constants
 	private static final String[] arguments = {
 		"<seed>",
 		"<min_v>",
@@ -175,6 +176,13 @@ public class MonteCarlo extends Task {
 				System.err.println("Error writing file for v="+vCount);	
 			}
 		}
+		
+//		try {
+//			new PlotHandler(plotFilePrefix, results, .25).write();
+//		} catch (IOException e) {
+//			System.err.println("Error writing file for p="+.25);	
+//		}
+		
 		StringBuilder builder = new StringBuilder();
 		for(int p = 0; p<= pMax; p+= pInc) {
 			builder.append(", " + (p / ((double) exp)));
