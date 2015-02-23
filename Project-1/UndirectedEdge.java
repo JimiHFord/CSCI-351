@@ -18,7 +18,9 @@ public class UndirectedEdge {
 
 	// private data members
 	private Vertex a, b;
-	private int id;
+	
+	// future projects may rely on a unique identifier for an edge
+	private final int id;
 	
 	/**
 	 * Construct an undirected edge
@@ -29,10 +31,10 @@ public class UndirectedEdge {
 	public UndirectedEdge(int id, Vertex a, Vertex b) {
 		this.id = id;
 		// enforce that a.n is always less than b.n
-		if(a.getN() < b.getN()) {
+		if(a.n < b.n) {
 			this.a = a;
 			this.b = b;
-		} else if(b.getN() < a.getN()) {
+		} else if(b.n < a.n) {
 			this.a = b;
 			this.b = a;
 		} else {
@@ -47,9 +49,10 @@ public class UndirectedEdge {
 	 * this edge
 	 * 
 	 * @param current the current vertex
-	 * @return the other vertex
+	 * @return the other vertex connected to this edge
 	 */
 	public Vertex other(Vertex current) {
-		return current == a ? b : a;
+		if(current == null) return null;
+		return current == a && current.n == a.n ? b : a;
 	}
 }

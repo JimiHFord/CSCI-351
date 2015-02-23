@@ -21,11 +21,12 @@ import edu.rit.util.Random;
  */
 public class Simulation {
 
+	// private data members
 	private int v, n;
 	private double p;
 	private Task ref;
 	private long seed;
-	private DoubleVbl.Mean average = new DoubleVbl.Mean();
+	private DoubleVbl.Mean average; 
 
 	/**
 	 * Construct a simulation object
@@ -43,6 +44,7 @@ public class Simulation {
 		this.n = n;
 		this.seed = seed;
 		this.ref = ref;
+		this.average = new DoubleVbl.Mean();
 	}
 	
 	
