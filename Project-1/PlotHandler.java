@@ -96,6 +96,8 @@ public class PlotHandler {
 				System.err.println("Could not deserialize " + args[i]);
 			} catch (IOException e) {
 				System.err.println("Could not open " + args[i]);
+			} catch (IllegalArgumentException e) {
+				System.err.println("Error in file " + args[i]);
 			}
 		}
 		

@@ -105,7 +105,12 @@ public class UndirectedGraph {
 	public void accumulateDistances(DoubleVbl.Mean thrLocal) {
 		for(int i = 0; i < v; i++) {
 			for(int j = i + 1; j < v; j++) {
-				thrLocal.accumulate(BFS(i, j));
+				int distance = BFS(i, j);
+				// only accumulate the distance if the two vertices
+				// are actually connected
+				if(distance > 0) {
+					thrLocal.accumulate(distance);
+				}
 			}
 		}
 	}
