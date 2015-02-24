@@ -181,8 +181,11 @@ public class MonteCarlo extends Task {
 			exp *= 10;
 		}
 		final int pMax = (int) (Math.round(maxP * exp));
-		final int pMin = (int) (Math.round(minP * exp));
 		final int pInc = (int) (Math.round(pGrain * exp));
+		// if 0 is the lower bound, set pMin to the next "step" of edge probability
+		// which is pInc
+		final int pMin = ((int) (Math.round(minP * exp))) == 0 ?
+				pInc : ((int) (Math.round(minP * exp)));
 		pGrainStr = null;
 		
 		
