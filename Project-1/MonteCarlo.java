@@ -211,7 +211,7 @@ public class MonteCarlo extends Task {
 		}
 				
 		StringBuilder builder = new StringBuilder();
-		for(int p = 0; p<= pMax; p+= pInc) {
+		for(int p = pMin; p<= pMax; p+= pInc) {
 			builder.append(", " + (p / ((double) exp)));
 		}
 		builder.append('\n');
