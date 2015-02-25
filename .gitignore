@@ -15,6 +15,7 @@ hs_err_pid*
 .metadata
 .recommenders
 .settings
+.classpath
 
 # test output files
 # *.csv
