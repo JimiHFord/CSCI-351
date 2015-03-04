@@ -9,9 +9,11 @@
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+
 import edu.rit.numeric.ListXYSeries;
 import edu.rit.numeric.plot.Dots;
 import edu.rit.numeric.plot.Plot;
+import edu.rit.numeric.plot.Strokes;
 
 /**
  * Class PlotHandler is the delegate for dealing with visualizing the data 
@@ -30,6 +32,8 @@ public class PlotHandler {
 	// private data members
 	private final String fileName;
 	private final int v;
+	private final double p;
+	private final boolean vMode;
 	private final SimulationResultCollection collection;
 	
 	/**
@@ -46,6 +50,27 @@ public class PlotHandler {
 			SimulationResultCollection collection, int v) {
 		fileName = plotFilePrefix + "-V-" + v + ".dwg";
 		this.v = v;
+		this.vMode = true;
+		this.p = 0;
+		this.collection = collection;
+	}
+	
+	/**
+	 * Construct a new plot handler that plots average distances for a fixed
+	 * edge probability p, while varying number of vertices v
+	 * 
+	 * @param plotFilePrefix prefix to be used in the name of
+	 * 			the plot file
+	 * @param collection collection of results of the finished set of
+	 * 			simulations. 
+	 * @param p edge probability used in each simulation
+	 */
+	public PlotHandler(String plotFilePrefix, 
+			SimulationResultCollection collection, double p) {
+		this.fileName = plotFilePrefix + "-p-" + p + ".dwg";
+		this.v = 0;
+		this.vMode = false;
+		this.p = p;
 		this.collection = collection;
 	}
 	
@@ -56,24 +81,45 @@ public class PlotHandler {
 	 * @throws IOException if it can't write to the file specified
 	 */
 	public void write() throws IOException {
-		ListXYSeries results = new ListXYSeries();
-		double[] values = collection.getAveragesForV(v);
-		for(int i = 0, p = collection.pMin; i < values.length; i++, 
-				p += collection.pInc) {
-			results.add(p / ((double) collection.pExp), values[i]);
+		if(this.vMode) {
+			ListXYSeries results = new ListXYSeries();
+			double[] values = collection.getAveragesForV(v);
+			for(int i = 0, p = collection.pMin; i < values.length; i++, 
+					p += collection.pInc) {
+				results.add(p / ((double) collection.pExp), values[i]);
+			}
+			
+			Plot plot = new Plot()
+	            .plotTitle (String.format
+	               ("Random Graphs, <I>V</I> = %1s", Integer.toString(v)))
+	            .xAxisTitle ("Edge Probability <I>p</I>")
+	            .xAxisTickFormat(new DecimalFormat("0.0"))
+	            .yAxisTitle ("Average Distance <I>d</I>")
+	            .yAxisTickFormat (new DecimalFormat ("0.0"))
+	            .seriesDots(null)
+	            .seriesStroke (Strokes.solid(2))
+	            .xySeries (results);
+			Plot.write(plot, new File(fileName));
+		} else {
+			ListXYSeries results = new ListXYSeries();
+			double[] values = collection.getAveragesForP(p);
+			for(int i = 0, v = collection.vMin; i < values.length; i++, 
+					v += collection.vInc) {
+				results.add(v, values[i]);
+			}
+			
+			Plot plot = new Plot()
+	            .plotTitle (String.format
+	               ("Random Graphs, <I>p</I> = %1s", Double.toString(p)))
+	            .xAxisTitle ("Number of Vertices <I>V</I>")
+	            .xAxisTickFormat(new DecimalFormat("0"))
+	            .yAxisTitle ("Average Distance <I>d</I>")
+	            .yAxisTickFormat (new DecimalFormat ("0.0"))
+	            .seriesDots(null)
+	            .seriesStroke (Strokes.solid(2))
+	            .xySeries (results);
+			Plot.write(plot, new File(fileName));
 		}
-		
-		Plot plot = new Plot()
-            .plotTitle (String.format
-               ("Random Graphs, <I>V</I> = %1s", Integer.toString(v)))
-            .xAxisTitle ("Edge Probability <I>p</I>")
-            .xAxisTickFormat(new DecimalFormat("0.0"))
-            .yAxisTitle ("Average Distance <I>d</I>")
-            .yAxisTickFormat (new DecimalFormat ("0.0"))
-            .seriesDots (Dots.circle (5))
-            .seriesStroke (null)
-            .xySeries (results);
-		Plot.write(plot, new File(fileName));
 	}
 	
 	/**

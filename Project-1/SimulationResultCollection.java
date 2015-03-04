@@ -118,6 +118,21 @@ public class SimulationResultCollection {
 	}
 	
 	/**
+	 * Get an array of averages for varying number of vertices and
+	 * a given edge probability
+	 * @param p the edge probability of interest
+	 * @return the array of averages for this edge probability
+	 */
+	public double[] getAveragesForP(double p) {
+		double[] result = new double[averages.length];
+		int col = col(p(p));
+		for(int i = 0; i < averages.length; i++) {
+			result[i] = averages[i][col];
+		}
+		return result;
+	}
+	
+	/**
 	 * Get an array of averages for varying edge probabilities and
 	 * a given vertex count.
 	 * 
@@ -160,5 +175,7 @@ public class SimulationResultCollection {
 	private int col(int p) {
 		return (p - pMin) / pInc;
 	}
+
+	
 	
 }
