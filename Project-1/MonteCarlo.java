@@ -44,6 +44,7 @@ public class MonteCarlo extends Task {
 		"<max_p>",
 		"<p_grain>",
 		"<num_simulations>",
+		"<simulation_mode>",
 		"<optional plotfile prefix>"
 	};
 	
@@ -56,7 +57,12 @@ public class MonteCarlo extends Task {
 		MAX_P = 5,
 		P_GRANULARITY = 6,
 		NUMBER_OF_SIMULATIONS = 7,
-		PLOT_FILE_PREFIX = 8;
+		SIMULATION_MODE = 8,
+		PLOT_FILE_PREFIX = 9;
+	
+	private static final String
+		MODE_V = "v",
+		MODE_P = "p";
 	
 	/**
 	 * MonteCarlo's main method to be invoked by Prof. Alan Kaminsky's
@@ -67,11 +73,12 @@ public class MonteCarlo extends Task {
 	 * <P>
 	 * usage: java pj2 MonteCarlo &lt;seed&gt; &lt;min_v&gt; &lt;max_v&gt; 
 	 * &lt;v_grain&gt; &lt;min_p&gt; &lt;max_p&gt; &lt;p_grain&gt; 
-	 * &lt;num_simulations&gt; &lt;optional plotfile prefix&gt;
+	 * &lt;num_simulations&gt; &lt;simulation_mode&gt; 
+	 * &lt;optional plotfile prefix&gt;
 	 * <P>
 	 */
 	public void main(String[] args) {
-		if(args.length != 8 && args.length != 9) {
+		if(args.length != 9 && args.length != 10) {
 			usage();
 		}
 		
@@ -79,6 +86,8 @@ public class MonteCarlo extends Task {
 		int minVertices = 0, maxVertices = 0, vertexGranularity = 0, 
 				numSimulations = 0;
 		double pGrain = 0, minP = 0, maxP = 0;
+		String modeStr = null;
+		boolean vMode = true;
 		
 		try {
 			seed = Long.parseLong(args[SEED]);
@@ -91,10 +100,10 @@ public class MonteCarlo extends Task {
 
 		try {
 			minVertices = Integer.parseInt(args[MIN_VERTICES]);
-			if(minVertices < 1) throw new NumberFormatException();
+			if(minVertices < 3) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
 			displayError(
-				String.format("Argument %1s must be numeric and between 1 "+
+				String.format("Argument %1s must be numeric and between 3 "+
 						"and %2d inclusive.\n", arguments[MIN_VERTICES], 
 						Integer.MAX_VALUE));
 		}
@@ -107,7 +116,7 @@ public class MonteCarlo extends Task {
 					arguments[MAX_VERTICES], arguments[MIN_VERTICES]));
 		} catch (NumberFormatException e) {
 			displayError(String.format(
-				"Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
+				"Argument %1s must be numeric and between 3 and %2d inclusive.\n", 
 					arguments[MAX_VERTICES], Integer.MAX_VALUE));
 		}
 		
@@ -164,8 +173,20 @@ public class MonteCarlo extends Task {
 					arguments[NUMBER_OF_SIMULATIONS], Integer.MAX_VALUE));
 		}
 		
+		modeStr = args[SIMULATION_MODE].toLowerCase();
+		if(modeStr.equals(MODE_V)) {
+			vMode = true;
+		} else if(modeStr.equals(MODE_P)) {
+			vMode = false;
+		} else {
+			displayError(String.format(
+					"Argument %1s must be either %2s or %3s.\n",
+					arguments[SIMULATION_MODE], MODE_V, MODE_P));
+		}
+		
+		
 		// store file prefix
-		final String plotFilePrefix = args.length == 9 ? 
+		final String plotFilePrefix = args.length == 10 ? 
 				args[PLOT_FILE_PREFIX] : "plot";
 		
 		String pMinStr = Double.toString(minP);
@@ -193,20 +214,39 @@ public class MonteCarlo extends Task {
 		SimulationResultCollection results = new SimulationResultCollection(
 				minVertices, maxVertices, vertexGranularity, pMin, pMax, pInc, exp);
 		
-		// loop through number of vertices
-		for(int vCount = minVertices; vCount <= maxVertices; 
-				vCount += vertexGranularity) {
-			// loop through edgeProbability
-			for(int p = pMin; p <= pMax; p += pInc) {
-				double prob = p / (double) exp;
-				// loop through each simulation
-				results.add(new Simulation(this, seed, vCount, prob, 
-						numSimulations).simulate());
+		// if they are holding V constant and varying p, loop through vertices first
+		if(vMode) {
+			// loop through number of vertices
+			for(int vCount = minVertices; vCount <= maxVertices; 
+					vCount += vertexGranularity) {
+				// loop through edgeProbability
+				for(int p = pMin; p <= pMax; p += pInc) {
+					double prob = p / (double) exp;
+					// loop through each simulation
+					results.add(new Simulation(this, seed, vCount, prob, 
+							numSimulations).simulate());
+				}
+				try {
+					new PlotHandler(plotFilePrefix, results, vCount).write();
+				} catch (IOException e) {
+					System.err.println("Error writing file for v="+vCount);	
+				}
 			}
-			try {
-				new PlotHandler(plotFilePrefix, results, vCount).write();
-			} catch (IOException e) {
-				System.err.println("Error writing file for v="+vCount);	
+		} else {
+			// they are holding p constant and varying V, loop through p first
+			for(int p = pMin; p <= pMax; p+= pInc) {
+				double prob = p / (double) exp;
+				// loop through number of vertices
+				for(int vCount = minVertices; vCount <= maxVertices;
+						vCount += vertexGranularity) {
+					results.add(new Simulation(this, seed, vCount, prob, 
+							numSimulations).simulate());
+				}
+				try {
+					new PlotHandler(plotFilePrefix, results, prob).write();
+				} catch (IOException e) {
+					System.err.println("Error writing file for p="+prob);
+				}
 			}
 		}
 				
@@ -244,7 +284,7 @@ public class MonteCarlo extends Task {
 	 */
 	private static void usage() {
 		System.err.printf ("Usage: java pj2 MonteCarlo "+
-				"%1s %2s %3s %4s %5s %6s %7s %8s %9s\n", 
+				"%1s %2s %3s %4s %5s %6s %7s %8s %9s %10s\n", 
 				arguments[SEED],
 				arguments[MIN_VERTICES],
 				arguments[MAX_VERTICES],
@@ -253,6 +293,7 @@ public class MonteCarlo extends Task {
 				arguments[MAX_P],
 				arguments[P_GRANULARITY],
 				arguments[NUMBER_OF_SIMULATIONS],
+				arguments[SIMULATION_MODE],
 				arguments[PLOT_FILE_PREFIX]);
 		System.exit(1);
 	}
