@@ -249,29 +249,56 @@ public class MonteCarlo extends Task {
 				}
 			}
 		}
-				
-		StringBuilder builder = new StringBuilder();
-		for(int p = pMin; p<= pMax; p+= pInc) {
-			builder.append(", " + (p / ((double) exp)));
-		}
-		builder.append('\n');
-		for(int v = minVertices; v<= maxVertices; v+= vertexGranularity) {
-			builder.append(v + ", ");
-			for(int p = pMin; p <= pMax; p+=pInc) {
-				builder.append(results.get(v,p)+", ");
+		if(vMode) {
+			StringBuilder builder = new StringBuilder();
+			for(int p = pMin; p<= pMax; p+= pInc) {
+				builder.append(", " + (p / ((double) exp)));
 			}
 			builder.append('\n');
-		}
-		PrintWriter tableWriter = null;
-		final String tableSuffix = "-table.csv"; 
-		try {
-			tableWriter = new PrintWriter(plotFilePrefix + tableSuffix);
-			tableWriter.print(builder.toString());
-		} catch (FileNotFoundException e) {
-			System.err.println("Error writing table data to file \""+ 
-				plotFilePrefix + tableSuffix +"\"");
-		} finally {
-			if(tableWriter != null) tableWriter.close();
+			for(int v = minVertices; v<= maxVertices; v+= vertexGranularity) {
+				builder.append(v + ", ");
+				for(int p = pMin; p <= pMax; p+=pInc) {
+					builder.append(results.get(v,p)+", ");
+				}
+				builder.append('\n');
+			}
+			PrintWriter tableWriter = null;
+			final String tableSuffix = "-V-table.csv"; 
+			try {
+				tableWriter = new PrintWriter(plotFilePrefix + tableSuffix);
+				tableWriter.print(builder.toString());
+			} catch (FileNotFoundException e) {
+				System.err.println("Error writing table data to file \""+ 
+					plotFilePrefix + tableSuffix +"\"");
+			} finally {
+				if(tableWriter != null) tableWriter.close();
+			}
+		} else {
+			StringBuilder builder = new StringBuilder();
+			// print top row of vertices
+			for(int v = minVertices; v <= maxVertices; v+= vertexGranularity) {
+				builder.append(", " + v);
+			}
+			builder.append('\n');
+			for(int p = pMin; p <= pMax; p += pInc) {
+				builder.append((p / ((double) exp)) + ", ");
+				for(int v = minVertices; v <= maxVertices; v += 
+						vertexGranularity) {
+					builder.append(results.get(v,p)+", ");
+				}
+				builder.append('\n');
+			}
+			PrintWriter tableWriter = null;
+			final String tableSuffix = "-p-table.csv"; 
+			try {
+				tableWriter = new PrintWriter(plotFilePrefix + tableSuffix);
+				tableWriter.print(builder.toString());
+			} catch (FileNotFoundException e) {
+				System.err.println("Error writing table data to file \""+ 
+					plotFilePrefix + tableSuffix +"\"");
+			} finally {
+				if(tableWriter != null) tableWriter.close();
+			}
 		}
 		System.out.println("Finished simulations! run \"java PlotHandler\" "+
 		"followed by any number of .dwg files (that were previously generated) "+
