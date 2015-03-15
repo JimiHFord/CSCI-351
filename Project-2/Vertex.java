@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Vertex {
 
 	// private data members
-	private ArrayList<UndirectedEdge> edges = new ArrayList<UndirectedEdge>();
+	protected ArrayList<UndirectedEdge> edges = new ArrayList<UndirectedEdge>();
 	
 	/**
 	 * The unique identifier for this vertex

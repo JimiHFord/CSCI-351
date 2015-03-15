@@ -17,7 +17,7 @@
 public class UndirectedEdge {
 
 	// private data members
-	private Vertex a, b;
+	private Cricket a, b;
 	
 	// future projects may rely on a unique identifier for an edge
 	private final int id;
@@ -28,7 +28,7 @@ public class UndirectedEdge {
 	 * @param a one vertex in the graph
 	 * @param b another vertex in the graph not equal to <I>a</I>
 	 */
-	public UndirectedEdge(int id, Vertex a, Vertex b) {
+	public UndirectedEdge(int id, Cricket a, Cricket b) {
 		this.id = id;
 		// enforce that a.n is always less than b.n
 		if(a.n < b.n) {
@@ -51,7 +51,7 @@ public class UndirectedEdge {
 	 * @param current the current vertex
 	 * @return the other vertex connected to this edge
 	 */
-	public Vertex other(Vertex current) {
+	public Cricket other(Cricket current) {
 		if(current == null) return null;
 		return current == a && current.n == a.n ? b : a;
 	}

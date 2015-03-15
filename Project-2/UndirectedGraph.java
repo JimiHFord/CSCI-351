@@ -23,7 +23,7 @@ public class UndirectedGraph {
 
 	// private data members
 	private ArrayList<UndirectedEdge> edges;
-	public ArrayList<Vertex> vertices;
+	public ArrayList<Cricket> vertices;
 	private int v;
 		
 	// Prevent construction
@@ -38,10 +38,10 @@ public class UndirectedGraph {
 	 */
 	private UndirectedGraph(int v) {
 		this.v = v;
-		vertices = new ArrayList<Vertex>(v);
+		vertices = new ArrayList<Cricket>(v);
 		edges = new ArrayList<UndirectedEdge>();
 		for(int i = 0; i < v; i++) {
-			vertices.add(new Vertex(i));
+			vertices.add(new Cricket(i));
 		}
 	}
 	
@@ -63,12 +63,12 @@ public class UndirectedGraph {
 	 * @param goal the reference to the goal vertex
 	 * @return the minimum distance between the two vertices
 	 */
-	private int BFS(Vertex start, Vertex goal) {
+	private int BFS(Cricket start, Cricket goal) {
 		int distance = 0, verticesToProcess = 1, uniqueNeighbors = 0;
-		LinkedList<Vertex> queue = new LinkedList<Vertex>();
+		LinkedList<Cricket> queue = new LinkedList<Cricket>();
 		boolean[] visited = new boolean[v];
 		visited[start.n] = true;
-		Vertex current, t2;
+		Cricket current, t2;
 		queue.add(start);
 		while(!queue.isEmpty()) {
 			current = queue.removeFirst();
@@ -127,7 +127,7 @@ public class UndirectedGraph {
 	public static UndirectedGraph randomGraph(Random prng, int v, double p) {
 		UndirectedGraph g = new UndirectedGraph(v);
 		UndirectedEdge edge;
-		Vertex a, b;
+		Cricket a, b;
 		int edgeCount = 0;
 		for (int i = 0; i < v; i++) {
 			for (int j = i + 1; j < v; j++) {
@@ -147,7 +147,7 @@ public class UndirectedGraph {
 	public static UndirectedGraph cycleGraph(int v) {
 		UndirectedGraph g = new UndirectedGraph(v);
 		UndirectedEdge edge;
-		Vertex a, b;
+		Cricket a, b;
 		int edgeCount = 0;
 		for (int i = 0; i < v; i++) {
 //			for (int j = i + 1; j < v; j++) {
