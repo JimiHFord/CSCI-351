@@ -1,10 +1,4 @@
-import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-
-import edu.rit.image.ByteImageQueue;
-import edu.rit.image.IndexPngWriter;
 import edu.rit.util.Random;
 
 
@@ -78,7 +72,8 @@ public class Chirp {
 	}
 	
 	private static void usage() {
-		System.err.println("usage: java Chirp <graph type> <num vertices> <output image> (<seed> <edge probability>)");
+		System.err.println("usage: java Chirp <graph type> <num vertices> <num ticks> "
+				+ "<output image> (<seed> <edge probability>)");
 		System.exit(1);
 	}
 }
