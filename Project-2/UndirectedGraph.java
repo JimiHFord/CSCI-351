@@ -158,19 +158,7 @@ public class UndirectedGraph {
 	}
 	
 	public static UndirectedGraph kregularGraph(int v, int k, CricketObserver o) {
-		UndirectedGraph g = new UndirectedGraph(v, o);
-		UndirectedEdge edge;
-		Cricket a, b;
-		int edgeCount = 0;
-		for(int i = 0; i < v; i++) {
-			for(int j = 1; j <= k; j++) {
-				a = g.vertices.get(i);
-				b = g.vertices.get((i+j)%v);
-				edge = new UndirectedEdge(edgeCount++, a, b);
-				g.edges.add(edge);
-			}
-		}
-		return g;
+		return smallWorldGraph(null, v, k, 0, o);
 	}
 	
 	/*
@@ -185,14 +173,25 @@ public class UndirectedGraph {
                         B = C    // Rewired edge for small-world graph 
                 Add edge (A, B) to graph
 	 */
-	public static UndirectedGraph smallWorldGraph(Random prng, int v, int k, double p, CricketObserver o) {
-		UndirectedGraph g = kregularGraph(v, k, o);
+	public static UndirectedGraph smallWorldGraph(Random prng, final int v, int k, double p, CricketObserver o) {
+		UndirectedGraph g = new UndirectedGraph(v, o);
 		UndirectedEdge edge;
 		Cricket a, b, c;
+		int edgeCount = 0;
 		for(int i = 0; i < v; i++) {
 			a = g.vertices.get(i);
+			for(int j = 1; j <= k; j++) {
+				b = g.vertices.get((i + j) % v);
+				if(prng != null && prng.nextDouble() < p) {
+					do {
+						c = g.vertices.get(prng.nextInt(v));
+					} while(c.n == a.n || c.n == b.n || a.directFlight(c));
+					b = c;
+				}
+				edge = new UndirectedEdge(edgeCount++, a, b);
+				g.edges.add(edge);
+			}
 		}
-		
-		return null;
+		return g;
 	}
 }

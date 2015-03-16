@@ -38,6 +38,7 @@ public class UndirectedEdge {
 			this.a = b;
 			this.b = a;
 		} else {
+//			System.out.println(a.n + ", " + b.n +", "+ (a==b));
 			throw new IllegalArgumentException("Cannot have self loop");
 		}
 		this.a.addEdge(this);

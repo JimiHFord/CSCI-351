@@ -17,4 +17,19 @@ public class CricketObserver {
 	public boolean chirped(int tick, int cricket) {
 		return chirps[tick][cricket];
 	}
+	
+	private boolean sync(int tick) {
+		
+		return false;
+	}
+	
+	private boolean equal(boolean[] a, boolean[] b) {
+		boolean retval = true;
+		if(a.length == b.length) {
+			for(int i = 0; i < a.length && retval; i++) {
+				retval = a[i] == b[i];
+			}
+		}
+		return retval;
+	}
 }
