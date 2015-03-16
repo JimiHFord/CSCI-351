@@ -24,7 +24,7 @@ import edu.rit.numeric.plot.Strokes;
  * open a graphical representation of these plots for each file.
  * 
  * @author Jimi Ford
- * @version 2-15-2015
+ * @version 3-1-2015
  *
  */
 public class PlotHandler {

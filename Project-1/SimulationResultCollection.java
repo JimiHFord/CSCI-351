@@ -13,7 +13,7 @@
  * probabilities, treating them as floating point values ranging from 0 to 1. 
  * 
  * @author Jimi Ford
- * @version 2-15-2015
+ * @version 3-1-2015
  */
 public class SimulationResultCollection {
 

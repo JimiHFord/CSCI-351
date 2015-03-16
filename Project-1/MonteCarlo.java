@@ -30,7 +30,7 @@ import edu.rit.pj2.Task;
  * distance from A to B.
  * 
  * @author  Jimi Ford
- * @version 2-15-2015
+ * @version 3-1-2015
  */
 public class MonteCarlo extends Task {
 
@@ -94,17 +94,17 @@ public class MonteCarlo extends Task {
 		} catch (NumberFormatException e) {
 			displayError(
 					String.format("Argument %1s must be numeric and between %2d "+
-					"and %3d inclusive.\n", arguments[SEED],
+					"and %3d inclusive.", arguments[SEED],
 				Long.MIN_VALUE, Long.MAX_VALUE));
 		}
 
 		try {
 			minVertices = Integer.parseInt(args[MIN_VERTICES]);
-			if(minVertices < 3) throw new NumberFormatException();
+			if(minVertices < 2) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
 			displayError(
-				String.format("Argument %1s must be numeric and between 3 "+
-						"and %2d inclusive.\n", arguments[MIN_VERTICES], 
+				String.format("Argument %1s must be numeric and between 2 "+
+						"and %2d inclusive.", arguments[MIN_VERTICES], 
 						Integer.MAX_VALUE));
 		}
 		
@@ -112,11 +112,11 @@ public class MonteCarlo extends Task {
 			maxVertices = Integer.parseInt(args[MAX_VERTICES]);
 			if(maxVertices < minVertices)
 				displayError(String.format(
-					"Argument %1s must be greater than or equal to %2s.\n",
+					"Argument %1s must be greater than or equal to %2s.",
 					arguments[MAX_VERTICES], arguments[MIN_VERTICES]));
 		} catch (NumberFormatException e) {
 			displayError(String.format(
-				"Argument %1s must be numeric and between 3 and %2d inclusive.\n", 
+				"Argument %1s must be numeric and between 3 and %2d inclusive.", 
 					arguments[MAX_VERTICES], Integer.MAX_VALUE));
 		}
 		
@@ -125,7 +125,7 @@ public class MonteCarlo extends Task {
 			if(vertexGranularity < 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
 			displayError(String.format(
-				"Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
+				"Argument %1s must be numeric and between 1 and %2d inclusive.", 
 					arguments[VERTEX_GRANULARITY], Integer.MAX_VALUE));
 		}
 		
@@ -135,7 +135,7 @@ public class MonteCarlo extends Task {
 		} catch (NumberFormatException e) {
 			displayError(String.format(
 					"Argument %1s must be numeric and between "+
-					"0 inclusive and 1 inclusive.\n", 
+					"0 inclusive and 1 inclusive.", 
 					arguments[MIN_P]));
 		}
 		
@@ -143,13 +143,13 @@ public class MonteCarlo extends Task {
 			maxP = Double.parseDouble(args[MAX_P]);
 			if(maxP < minP)
 				displayError(String.format(
-						"Argument %1s must be greater than or equal to %2s.\n", 
+						"Argument %1s must be greater than or equal to %2s.", 
 						arguments[MAX_P], arguments[MIN_P]));
 			if(maxP > 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
 			displayError(String.format(
 				"Argument %1s must be numeric and between "+
-				"0 inclusive and 1 inclusive.\n",
+				"0 inclusive and 1 inclusive.",
 					arguments[MAX_P]));
 		}
 		
@@ -160,7 +160,7 @@ public class MonteCarlo extends Task {
 		} catch (NumberFormatException e) {
 			displayError(String.format(
 				"Argument %1s must be numeric and between "+
-				"0 exclusive and 1 inclusive.\n", 
+				"0 exclusive and 1 inclusive.", 
 					arguments[P_GRANULARITY]));
 		}
 		
@@ -169,7 +169,7 @@ public class MonteCarlo extends Task {
 			if(numSimulations < 1) throw new NumberFormatException();
 		} catch (NumberFormatException e) {
 			displayError(String.format(
-				"Argument %1s must be numeric and between 1 and %2d inclusive.\n", 
+				"Argument %1s must be numeric and between 1 and %2d inclusive.", 
 					arguments[NUMBER_OF_SIMULATIONS], Integer.MAX_VALUE));
 		}
 		
@@ -180,7 +180,7 @@ public class MonteCarlo extends Task {
 			vMode = false;
 		} else {
 			displayError(String.format(
-					"Argument %1s must be either %2s or %3s.\n",
+					"Argument %1s must be either %2s or %3s.",
 					arguments[SIMULATION_MODE], MODE_V, MODE_P));
 		}
 		
