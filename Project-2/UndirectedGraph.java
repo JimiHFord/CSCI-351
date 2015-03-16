@@ -166,4 +166,26 @@ public class UndirectedGraph {
 		}
 		return g;
 	}
+	/*
+	 * For i = 0 to V − 1: 
+        A = Vertex at index i 
+        For j = 1 to k: 
+                B = Vertex at index i + j (mod V)    // Edge for k-regular graph 
+                If random# < p: 
+                        C = Vertex at index int (random# x V) 
+                        While C = A or C = B or edge (A, C) exists (in either direction): 
+                                C = Vertex at index int (random# x V) 
+                        B = C    // Rewired edge for small-world graph 
+                Add edge (A, B) to graph
+	 */
+	public static UndirectedGraph smallWorldGraph(int v, int k, CricketObserver o) {
+		UndirectedGraph g = new UndirectedGraph(v, o);
+		UndirectedEdge edge;
+		Cricket a, b, c;
+		for(int i = 0; i < v; i++) {
+			a = g.vertices.get(i);
+		}
+		
+		return null;
+	}
 }
