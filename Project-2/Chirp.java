@@ -41,7 +41,8 @@ public class Chirp {
 		}
 		UndirectedGraph g = null;
 		CricketObserver o = new CricketObserver(crickets, ticks);
-		if(mode == 'r') {
+		switch(mode) {
+		case 'r':
 			try {
 				seed = Long.parseLong(args[SEED_INDEX]);
 				edgeProbability = Double.parseDouble(args[EDGE_PROBABILITY_INDEX]);
@@ -51,9 +52,13 @@ public class Chirp {
 			} catch(IndexOutOfBoundsException e) {
 				error("<seed> and <edge probability> must be included with random graph mode");
 			}
-		} else {
+			break;
+			
+		case 'c':
 			g = UndirectedGraph.cycleGraph(crickets, o);
+			break;
 		}
+
 		g.vertices.get(0).forceChirp();
 		Ticker.tick(g, ticks);
 		
