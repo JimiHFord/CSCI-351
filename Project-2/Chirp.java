@@ -1,4 +1,5 @@
 import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
@@ -30,7 +31,7 @@ public class Chirp {
 			error("<num vertices> must be a number");
 		} 
 		try {
-			ticks = Integer.parseInt(args[NUM_TICKS_INDEX]);
+			ticks = Integer.parseInt(args[NUM_TICKS_INDEX]) + 1;
 		} catch (NumberFormatException e) {
 			error("<num ticks> must be numeric");
 		}
@@ -53,11 +54,17 @@ public class Chirp {
 		} else {
 			g = UndirectedGraph.cycleGraph(crickets, o);
 		}
+		g.vertices.get(0).forceChirp();
 		Ticker.tick(g, ticks);
 		
-
-		IndexPngWriter w = new IndexPngWriter(ticks, crickets, null, null);
-		ImageHandler.handle(o, outputImage);
+		
+		
+		try {
+			ImageHandler.handle(o, outputImage);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 //		printGraph(g);
 	}
 	

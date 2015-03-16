@@ -12,7 +12,7 @@ public class Cricket extends Vertex {
 	}
 	
 	public void forceChirp() {
-		willChirp = true;
+		willChirp = chirp[0] = true;
 	}
 	
 	public void emitChirp() {
