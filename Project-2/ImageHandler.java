@@ -18,17 +18,18 @@ public class ImageHandler {
 							 CHIRPED = 1;
 	
 	public static void handle(CricketObserver o, String out) throws FileNotFoundException {
-		AList<Color> palette = new AList<Color>();
-		palette.addLast (new Color() .rgb (  0, 255, 0)); // green
-		palette.addLast (new Color() .rgb (255,   0, 0)); // red
-		
+		AList<Color> palette = new AList<Color>(); // green
 		Color green = new Color().rgb(0, 255, 0);
-		Color red = new Color().rgb(255, 0, 0);
+		Color red = new Color().rgb(255, 0, 0); // red
+		palette.addLast (green);
+		palette.addLast (red);
+		
+		
 		OutputStream imageout =
 				new BufferedOutputStream (new FileOutputStream (new File(out)));
 		IndexPngWriter imageWriter = new IndexPngWriter
 				(o.ticks, o.crickets, imageout, palette);
-		imageWriter.setPixelDimensions(600, 600, PixelUnit.PIXELS_PER_CENTIMETER);
+//		imageWriter.setPixelDimensions(600, 600, PixelUnit.PIXELS_PER_CENTIMETER);
 		ByteImageQueue imageQueue = imageWriter.getImageQueue();
 		byte[] bytes;
 		boolean chirped;
