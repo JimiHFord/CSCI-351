@@ -9,13 +9,14 @@ public class Chirp {
 							 NUM_TICKS_INDEX = 2,
 							 OUTPUT_IMAGE_INDEX = 3,
 							 SEED_INDEX = 4,
+							 K_INDEX = 4,
 							 EDGE_PROBABILITY_INDEX = 5;
 	
 	public static void main(String[] args) {
-		if(args.length != 4 && args.length != 6) usage();
-		int crickets = 0, ticks = 0;
+		if(args.length != 4 && args.length != 5 && args.length != 6) usage();
+		int crickets = 0, ticks = 0, k = 0;
 		long seed = 0;
-		double edgeProbability = 0;
+		double prob = 0;
 		char mode;
 		String outputImage = args[OUTPUT_IMAGE_INDEX];
 		
@@ -30,8 +31,11 @@ public class Chirp {
 			error("<num ticks> must be numeric");
 		}
 		mode = args[GRAPH_TYPE_INDEX].toLowerCase().charAt(0);
-		if(!(mode == 'c' || mode == 'r')) {
-			error("<graph type> must be either 'c' for cycle or 'r' for random");
+		if(!(mode == 'c' || mode == 'r' || mode == 'k' || mode == 's')) {
+			error("<graph type> must be either 'c' for cycle, "
+					+ "'r' for random, "
+					+ "'k' for k-regular, "
+					+ "'s' for small-world");
 		}
 		UndirectedGraph g = null;
 		CricketObserver o = new CricketObserver(crickets, ticks);
@@ -39,8 +43,8 @@ public class Chirp {
 		case 'r':
 			try {
 				seed = Long.parseLong(args[SEED_INDEX]);
-				edgeProbability = Double.parseDouble(args[EDGE_PROBABILITY_INDEX]);
-				g = UndirectedGraph.randomGraph(new Random(seed), crickets, edgeProbability, o);
+				prob = Double.parseDouble(args[EDGE_PROBABILITY_INDEX]);
+				g = UndirectedGraph.randomGraph(new Random(seed), crickets, prob, o);
 			} catch(NumberFormatException e) {
 				error("<seed> and <edge probability> must be numeric");
 			} catch(IndexOutOfBoundsException e) {
@@ -51,6 +55,13 @@ public class Chirp {
 		case 'c':
 			g = UndirectedGraph.cycleGraph(crickets, o);
 			break;
+		case 'k':
+			try {
+				k = Integer.parseInt(args[K_INDEX]);
+				g = UndirectedGraph.kregularGraph(crickets, k, o);
+			} catch (NumberFormatException e) {
+				error("<k> must be numeric");
+			}
 		}
 
 		g.vertices.get(0).forceChirp();
@@ -73,7 +84,8 @@ public class Chirp {
 	
 	private static void usage() {
 		System.err.println("usage: java Chirp <graph type> <num vertices> <num ticks> "
-				+ "<output image> (<seed> <edge probability>)");
+				+ "<output image> {(<seed> <edge probability>), or "
+				+ "(<k>)}");
 		System.exit(1);
 	}
 }
