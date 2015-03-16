@@ -1,4 +1,5 @@
-import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import edu.rit.util.Random;
 
 
@@ -85,10 +86,16 @@ public class Chirp {
 		
 		try {
 			ImageHandler.handle(o, outputImage);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IOException e) {
+			error("Problem writing image");
 		}
+		int sync = o.sync();
+		if(sync >= 0) {
+			System.out.println("Crickets synchronized at t="+sync+".");
+		} else {
+			System.out.println("Crickets did not synchronize.");
+		}
+		
 	}
 	
 	private static void error(String msg) {

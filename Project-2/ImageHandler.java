@@ -15,15 +15,17 @@ import edu.rit.util.AList;
 public class ImageHandler {
 
 	public static final byte SILENT = 0,
-							 CHIRPED = 1;
+							 CHIRPED = 1,
+							 SYNC = 2;
 	
 	public static void handle(CricketObserver o, String out) throws FileNotFoundException {
 		AList<Color> palette = new AList<Color>(); // green
 		Color green = new Color().rgb(0, 255, 0);
 		Color red = new Color().rgb(255, 0, 0); // red
-		Color white = new Color().rgb(255,255,255); // white
+		Color blue = new Color().rgb(0,0,255); // blue
 		palette.addLast (green);
 		palette.addLast (red);
+		palette.addLast (blue);
 		
 		
 		OutputStream imageout =
@@ -38,8 +40,12 @@ public class ImageHandler {
 		for(int i = 0; i < o.ticks; i++) {
 			bytes = new byte[o.crickets];
 			for(int j = 0, cricket = 0; j < bytes.length; j++, cricket++) {
-				chirped = o.chirped(i, cricket);
-				bytes[j] = chirped ? CHIRPED : SILENT;
+				if(i != sync) {
+					chirped = o.chirped(i, cricket);
+					bytes[j] = chirped ? CHIRPED : SILENT;
+				} else {
+					bytes[j] = SYNC;
+				}
 			}
 			try {
 				imageQueue.put(i, bytes);
