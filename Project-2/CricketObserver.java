@@ -13,4 +13,8 @@ public class CricketObserver {
 	public void reportChirp(int tick, int n) {
 		chirps[tick][n] = true;
 	}
+	
+	public boolean chirped(int tick, int cricket) {
+		return chirps[tick][cricket];
+	}
 }
