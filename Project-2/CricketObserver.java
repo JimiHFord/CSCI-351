@@ -1,7 +1,7 @@
 
 public class CricketObserver {
 
-	private int crickets, ticks;
+	public final int crickets, ticks;
 	private boolean[][] chirps;
 	
 	public CricketObserver(int crickets, int ticks) {

@@ -4,13 +4,10 @@ public class Cricket extends Vertex {
 	private boolean[] chirp = new boolean[3];
 	private boolean willChirp;
 	private int currentTick = 0;
-	private CricketObserver observer;
+	private final CricketObserver observer;
 	
-	public Cricket(int n) {
+	public Cricket(int n, CricketObserver o) {
 		super(n);
-	}
-	
-	public void setObserver(CricketObserver o) {
 		this.observer = o;
 	}
 	
