@@ -10,10 +10,13 @@ public class Chirp {
 							 OUTPUT_IMAGE_INDEX = 3,
 							 SEED_INDEX = 4,
 							 K_INDEX = 4,
-							 EDGE_PROBABILITY_INDEX = 5;
+							 EDGE_PROBABILITY_INDEX = 5,
+							 K_SEED_INDEX = 5,
+							 REWIRE_PROBABILITY_INDEX = 6;
 	
 	public static void main(String[] args) {
-		if(args.length != 4 && args.length != 5 && args.length != 6) usage();
+		if(args.length != 4 && args.length != 5 && 
+				args.length != 6 && args.length != 7) usage();
 		int crickets = 0, ticks = 0, k = 0;
 		long seed = 0;
 		double prob = 0;
@@ -51,7 +54,6 @@ public class Chirp {
 				error("<seed> and <edge probability> must be included with random graph mode");
 			}
 			break;
-			
 		case 'c':
 			g = UndirectedGraph.cycleGraph(crickets, o);
 			break;
@@ -60,8 +62,20 @@ public class Chirp {
 				k = Integer.parseInt(args[K_INDEX]);
 				g = UndirectedGraph.kregularGraph(crickets, k, o);
 			} catch (NumberFormatException e) {
-				error("<k> must be numeric");
+				error("<k> must be an integer");
 			}
+			break;
+		case 's':
+			try {
+				k = Integer.parseInt(args[K_INDEX]);
+				prob = Double.parseDouble(args[REWIRE_PROBABILITY_INDEX]);
+				seed = Long.parseLong(args[K_SEED_INDEX]);
+				g = UndirectedGraph.smallWorldGraph(new Random(seed), crickets, k, prob, o);
+			} catch (NumberFormatException e) {
+				error("<k> must be an integer and <rewire probability> must be a number "
+						+ "between 0 and 1, and <seed> must be numeric");
+			}
+			break;
 		}
 
 		g.vertices.get(0).forceChirp();
@@ -85,7 +99,7 @@ public class Chirp {
 	private static void usage() {
 		System.err.println("usage: java Chirp <graph type> <num vertices> <num ticks> "
 				+ "<output image> {(<seed> <edge probability>), or "
-				+ "(<k>)}");
+				+ "(<k>), or (<k> <seed> <rewire probability>)}");
 		System.exit(1);
 	}
 }
