@@ -154,20 +154,27 @@ public class UndirectedGraph {
 	}
 	
 	public static UndirectedGraph cycleGraph(int v, CricketObserver o) {
+		return kregularGraph(v, 1, o);
+	}
+	
+	public static UndirectedGraph kregularGraph(int v, int k, CricketObserver o) {
 		UndirectedGraph g = new UndirectedGraph(v, o);
 		UndirectedEdge edge;
 		Cricket a, b;
 		int edgeCount = 0;
-		for (int i = 0; i < v; i++) {
-			a = g.vertices.get(i);
-			b = g.vertices.get((i+1)%v);
-			edge = new UndirectedEdge(edgeCount++, a, b);
-			g.edges.add(edge);
+		for(int i = 0; i < v; i++) {
+			for(int j = 1; j <= k; j++) {
+				a = g.vertices.get(i);
+				b = g.vertices.get((i+j)%v);
+				edge = new UndirectedEdge(edgeCount++, a, b);
+				g.edges.add(edge);
+			}
 		}
 		return g;
 	}
+	
 	/*
-	 * For i = 0 to V − 1: 
+	For i = 0 to V − 1: 
         A = Vertex at index i 
         For j = 1 to k: 
                 B = Vertex at index i + j (mod V)    // Edge for k-regular graph 
@@ -178,8 +185,8 @@ public class UndirectedGraph {
                         B = C    // Rewired edge for small-world graph 
                 Add edge (A, B) to graph
 	 */
-	public static UndirectedGraph smallWorldGraph(int v, int k, CricketObserver o) {
-		UndirectedGraph g = new UndirectedGraph(v, o);
+	public static UndirectedGraph smallWorldGraph(Random prng, int v, int k, double p, CricketObserver o) {
+		UndirectedGraph g = kregularGraph(v, k, o);
 		UndirectedEdge edge;
 		Cricket a, b, c;
 		for(int i = 0; i < v; i++) {
