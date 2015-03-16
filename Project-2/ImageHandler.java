@@ -21,6 +21,7 @@ public class ImageHandler {
 		AList<Color> palette = new AList<Color>(); // green
 		Color green = new Color().rgb(0, 255, 0);
 		Color red = new Color().rgb(255, 0, 0); // red
+		Color white = new Color().rgb(255,255,255); // white
 		palette.addLast (green);
 		palette.addLast (red);
 		
@@ -33,6 +34,7 @@ public class ImageHandler {
 		ByteImageQueue imageQueue = imageWriter.getImageQueue();
 		byte[] bytes;
 		boolean chirped;
+		int sync = o.sync();
 		for(int i = 0; i < o.ticks; i++) {
 			bytes = new byte[o.crickets];
 			for(int j = 0, cricket = 0; j < bytes.length; j++, cricket++) {

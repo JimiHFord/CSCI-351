@@ -18,9 +18,24 @@ public class CricketObserver {
 		return chirps[tick][cricket];
 	}
 	
+	public int sync() {
+		int retval = -1;
+		int row = ticks -1;
+		while(row > 3) {
+			if(!sync(row)) return retval;
+			retval = row--;
+		}
+		return retval;
+	}
+	
 	private boolean sync(int tick) {
-		
-		return false;
+		if(tick + 3 >= ticks) {
+			tick = ticks - 4;
+		}
+		return 
+			equal(chirps[tick], chirps[tick+1]) &&
+			equal(chirps[tick+1], chirps[tick+2]) &&
+			equal(chirps[tick+2], chirps[tick+3]);
 	}
 	
 	private boolean equal(boolean[] a, boolean[] b) {
