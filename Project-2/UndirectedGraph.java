@@ -36,12 +36,12 @@ public class UndirectedGraph {
 	 * method
 	 * @param v the number of vertices in the graph
 	 */
-	private UndirectedGraph(int v) {
+	private UndirectedGraph(int v, CricketObserver o) {
 		this.v = v;
 		vertices = new ArrayList<Cricket>(v);
 		edges = new ArrayList<UndirectedEdge>();
 		for(int i = 0; i < v; i++) {
-			vertices.add(new Cricket(i));
+			vertices.add(new Cricket(i,o));
 		}
 	}
 	
@@ -115,6 +115,15 @@ public class UndirectedGraph {
 		}
 	}
 	
+	public void tick(int tick) {
+		Cricket c;
+		for(int i = 0; i < v; i++) {
+			c = vertices.get(i);
+			c.timeTick(tick);
+			c.emitChirp();
+		}
+	}
+	
 	/**
 	 * Generate a random graph with a PRNG, a specified vertex count and
 	 * an edge probability
@@ -124,8 +133,8 @@ public class UndirectedGraph {
 	 * @param p edge probability between vertices
 	 * @return the randomly generated graph
 	 */
-	public static UndirectedGraph randomGraph(Random prng, int v, double p) {
-		UndirectedGraph g = new UndirectedGraph(v);
+	public static UndirectedGraph randomGraph(Random prng, int v, double p, CricketObserver o) {
+		UndirectedGraph g = new UndirectedGraph(v, o);
 		UndirectedEdge edge;
 		Cricket a, b;
 		int edgeCount = 0;
@@ -144,20 +153,16 @@ public class UndirectedGraph {
 		return g;
 	}
 	
-	public static UndirectedGraph cycleGraph(int v) {
-		UndirectedGraph g = new UndirectedGraph(v);
+	public static UndirectedGraph cycleGraph(int v, CricketObserver o) {
+		UndirectedGraph g = new UndirectedGraph(v, o);
 		UndirectedEdge edge;
 		Cricket a, b;
 		int edgeCount = 0;
 		for (int i = 0; i < v; i++) {
-//			for (int j = i + 1; j < v; j++) {
-			// connect edges
-			// always order it `i` then `j`
 			a = g.vertices.get(i);
 			b = g.vertices.get((i+1)%v);
 			edge = new UndirectedEdge(edgeCount++, a, b);
 			g.edges.add(edge);
-//			}
 		}
 		return g;
 	}
