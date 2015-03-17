@@ -164,18 +164,6 @@ public class UndirectedGraph {
 		return smallWorldGraph(null, v, k, 0, o);
 	}
 	
-	/*
-	For i = 0 to V ��� 1: 
-        A = Vertex at index i 
-        For j = 1 to k: 
-                B = Vertex at index i + j (mod V)    // Edge for k-regular graph 
-                If random# < p: 
-                        C = Vertex at index int (random# x V) 
-                        While C = A or C = B or edge (A, C) exists (in either direction): 
-                                C = Vertex at index int (random# x V) 
-                        B = C    // Rewired edge for small-world graph 
-                Add edge (A, B) to graph
-	 */
 	public static UndirectedGraph smallWorldGraph(Random prng, final int v, int k, double p, CricketObserver o) {
 		UndirectedGraph g = new UndirectedGraph(v, o);
 		UndirectedEdge edge;
@@ -196,5 +184,29 @@ public class UndirectedGraph {
 			}
 		}
 		return g;
+	}
+	/*
+	Degree distribution of a graph
+	The fractions of vertices having degree 0, 1, 2, etc.
+	Relevance to computer networks: Influences average distance and diameter
+	Also characterizes the structure of the graph (network)
+	How to compute—make a histogram:
+	count[d] = Number of vertices of degree d,  0 ≤ d ≤ V−1
+	pr[d] = count[d] / V
+	Entropy of a graph
+	A single number H derived from the degree distribution
+	Measures how random the graph is—the higher the entropy, the greater the randomness
+	How to compute:
+	            V−1	 
+	H (bits) = − Σ pr[d] log2 pr[d]
+	           d = 0	 
+	(Omit terms where pr[d] = 0)
+	log2 x = log x / log 2
+	*/
+	public static UndirectedGraph scaleFreeGraph(Random prng, final int v, 
+			final int k, double p, CricketObserver o) {
+		UndirectedGraph g = new UndirectedGraph(v, o);
+		
+		return null;
 	}
 }

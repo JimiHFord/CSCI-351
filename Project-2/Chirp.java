@@ -35,16 +35,18 @@ public class Chirp {
 			error("<num ticks> must be numeric");
 		}
 		mode = args[GRAPH_TYPE_INDEX].toLowerCase().charAt(0);
-		if(!(mode == 'c' || mode == 'r' || mode == 'k' || mode == 's')) {
+		if(!(mode == 'c' || mode == 'r' || mode == 'k' || 
+				mode == 's' || mode == 'f')) {
 			error("<graph type> must be either 'c' for cycle, "
 					+ "'r' for random, "
 					+ "'k' for k-regular, "
-					+ "'s' for small-world");
+					+ "'s' for small-world, "
+					+ "'f' for scale-free");
 		}
 		UndirectedGraph g = null;
 		CricketObserver o = new CricketObserver(crickets, ticks);
 		switch(mode) {
-		case 'r':
+		case 'r': // RANDOM GRAPH
 			try {
 				seed = Long.parseLong(args[SEED_INDEX]);
 				prob = Double.parseDouble(args[EDGE_PROBABILITY_INDEX]);
@@ -55,28 +57,34 @@ public class Chirp {
 				error("<seed> and <edge probability> must be included with random graph mode");
 			}
 			break;
-		case 'c':
+		case 'c': // CYCLE GRAPH
 			g = UndirectedGraph.cycleGraph(crickets, o);
 			break;
-		case 'k':
+		case 'k': // K-REGULAR GRAPH
 			try {
 				k = Integer.parseInt(args[K_INDEX]);
 				g = UndirectedGraph.kregularGraph(crickets, k, o);
 			} catch (NumberFormatException e) {
 				error("<k> must be an integer");
+			} catch (IllegalArgumentException e) {
+				error("<k> must be < the number of crickets");
 			}
 			break;
-		case 's':
+		case 's': // SMALL WORLD GRAPH
 			try {
 				k = Integer.parseInt(args[K_INDEX]);
 				prob = Double.parseDouble(args[REWIRE_PROBABILITY_INDEX]);
 				seed = Long.parseLong(args[K_SEED_INDEX]);
 				g = UndirectedGraph.smallWorldGraph(new Random(seed), crickets, k, prob, o);
 			} catch (NumberFormatException e) {
-				error("<k> must be an integer and <rewire probability> must be a number "
+				error("<k> must be an integer < V, <rewire probability> must be a number "
 						+ "between 0 and 1, and <seed> must be numeric");
+			} catch (IllegalArgumentException e) {
+				error("<k> must be < the number of crickets");
 			}
 			break;
+		case 'f':
+			throw new UnsupportedOperationException("Not implemented");
 		}
 
 		g.vertices.get(0).forceChirp();

@@ -1,0 +1,41 @@
+#####################################
+# EVEN NUMBER VERTICES CYCLE GRAPHS #
+#####################################
+c 2 20 cycle-even-002.png
+c 4 20 cycle-even-004.png
+c 6 20 cycle-even-006.png
+c 8 20 cycle-even-008.png
+c 10 20 cycle-even-010.png
+c 12 20 cycle-even-012.png
+c 14 30 cycle-even-014.png
+c 16 30 cycle-even-016.png
+c 200 450 cycle-even-200.png
+
+####################################
+# ODD NUMBER VERTICES CYCLE GRAPHS #
+####################################
+c 3 10 cycle-odd-003.png
+c 5 10 cycle-odd-005.png
+c 7 20 cycle-odd-007.png
+c 9 25 cycle-odd-009.png
+c 11 30 cycle-odd-011.png
+c 13 30 cycle-odd-013.png
+c 15 35 cycle-odd-015.png
+c 201 450 cycle-odd-201.png
+
+#################
+# RANDOM GRAPHS #
+#################
+r 20 30 random-20-.07.png 12543 .07
+r 20 30 random-20-.08.png 15432 .08
+r 20 30 random-20-.09.png 54321 .09
+r 20 30 random-20-.1.png 12345 .1
+r 20 30 random-20-.2.png 23451 .2
+r 20 30 random-20-.3.png 34512 .3
+r 20 30 random-20-.4.png 45123 .4
+r 20 30 random-20-.5.png 51234 .5
+r 20 30 random-20-.6.png -12345 .6
+r 20 30 random-20-.7.png -23451 .7
+r 20 30 random-20-.8.png -34512 .8
+r 20 30 random-20-.9.png -45123 .9
+r 20 30 random-20-1.png -512234 1
