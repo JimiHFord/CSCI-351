@@ -98,12 +98,41 @@ public class Chirp {
 			error("Problem writing image");
 		}
 		int sync = o.sync();
-		if(sync >= 0) {
-			System.out.println("Crickets synchronized at t="+sync+".");
-		} else {
-			System.out.println("Crickets did not synchronize.");
+		String description;
+		switch(mode) {
+		case 'c': // CYCLE GRAPH
+			description = "Cycle V = " + crickets +":";
+			handleOutput(description,sync);
+			break;
+		case 'r': // RANDOM GRAPH
+			description = "Random V = " + crickets +", p = " + prob + ":";
+			handleOutput(description,sync);
+			break;
+		case 'k': // K-REGULAR GRAPH
+			description = "K-regular V = " + crickets +", k = " + k + ":";
+			handleOutput(description,sync);
+			break;
+		case 's': // SMALL-WORLD GRAPH
+			description = "Small-world V = " + crickets + ", k = " + k + 
+				", p = " + prob + ":";
+			handleOutput(description,sync);
+			break;
+		case 'f': // SCALE-FREE GRAPH
+			description = "Scale-free V = " + crickets +", k = " + k + ":";
+			handleOutput(description,sync);
+			break;
 		}
 		
+	}
+	
+	private static void handleOutput(String description, int sync) {
+		System.out.print(description);
+		if(sync >= 0) {
+			System.out.println("\t"+" synchronized at t="+sync+".");
+		} else {
+			System.out.println("\t "+(char)27+"[31m"+  "did not synchronize." + 
+					(char)27 + "[0m");
+		}
 	}
 	
 	private static void error(String msg) {
