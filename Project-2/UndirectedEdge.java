@@ -54,6 +54,6 @@ public class UndirectedEdge {
 	 */
 	public Cricket other(Cricket current) {
 		if(current == null) return null;
-		return current == a && current.n == a.n ? b : a;
+		return current.n == a.n ? b : a;
 	}
 }

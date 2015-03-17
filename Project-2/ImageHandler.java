@@ -4,11 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
 import edu.rit.image.ByteImageQueue;
 import edu.rit.image.Color;
 import edu.rit.image.IndexPngWriter;
-import edu.rit.image.PixelUnit;
 import edu.rit.util.AList;
 
 
@@ -32,7 +30,6 @@ public class ImageHandler {
 				new BufferedOutputStream (new FileOutputStream (new File(out)));
 		IndexPngWriter imageWriter = new IndexPngWriter
 				(o.ticks, o.crickets, imageout, palette);
-//		imageWriter.setPixelDimensions(600, 600, PixelUnit.PIXELS_PER_CENTIMETER);
 		ByteImageQueue imageQueue = imageWriter.getImageQueue();
 		byte[] bytes;
 		boolean chirped;
