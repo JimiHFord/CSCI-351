@@ -19,12 +19,17 @@ public class Automator {
             boolean skip, comment;
             for (String line : lines) {
             	++lineCount;
-            	lineArr = line.trim().split(" ");
+            	line = line.trim();
+            	lineArr = line.split(" ");
             	skip = lineArr[0].equals(line);
             	comment = lineArr[0].startsWith("#");
             	if(skip || comment) {
             		if(comment) {
-            			System.out.println(line);
+            			if(line.equals("#")) {
+            				System.out.println();
+            			} else {
+            				System.out.println(line);
+            			}
             		}
             		continue;
             	}
