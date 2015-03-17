@@ -19,32 +19,29 @@ public class CricketObserver {
 	}
 	
 	public int sync() {
-		int retval = -1;
-		int row = ticks -1;
-		while(row > 3) {
-			if(!sync(row)) return retval;
-			retval = row--;
+		int row = 0;
+		while(row < ticks) {
+			if(sync(row)) return row;
+			row++;
 		}
-		return retval;
+		return -1;
 	}
 	
 	private boolean sync(int tick) {
-		if(tick + 3 >= ticks) {
-			tick = ticks - 4;
-		}
-		return 
-			equal(chirps[tick], chirps[tick+1]) &&
-			equal(chirps[tick+1], chirps[tick+2]) &&
-			equal(chirps[tick+2], chirps[tick+3]);
-	}
-	
-	private boolean equal(boolean[] a, boolean[] b) {
 		boolean retval = true;
-		if(a.length == b.length) {
-			for(int i = 0; i < a.length && retval; i++) {
-				retval = a[i] == b[i];
-			}
+		for(int i = 0; i < crickets && retval; i++) {
+			retval = chirps[tick][i];
 		}
 		return retval;
 	}
+	
+//	private boolean equal(boolean[] a, boolean[] b) {
+//		boolean retval = true;
+//		if(a.length == b.length) {
+//			for(int i = 0; i < a.length && retval; i++) {
+//				retval = a[i] == b[i];
+//			}
+//		}
+//		return retval;
+//	}
 }
