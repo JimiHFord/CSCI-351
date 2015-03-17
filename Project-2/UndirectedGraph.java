@@ -120,6 +120,9 @@ public class UndirectedGraph {
 		for(int i = 0; i < v; i++) {
 			c = vertices.get(i);
 			c.timeTick(tick);
+		}
+		for(int i = 0; i < v; i++) {
+			c = vertices.get(i);
 			c.emitChirp();
 		}
 	}
@@ -162,7 +165,7 @@ public class UndirectedGraph {
 	}
 	
 	/*
-	For i = 0 to V − 1: 
+	For i = 0 to V ��� 1: 
         A = Vertex at index i 
         For j = 1 to k: 
                 B = Vertex at index i + j (mod V)    // Edge for k-regular graph 
