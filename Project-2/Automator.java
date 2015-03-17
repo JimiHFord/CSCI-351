@@ -16,10 +16,16 @@ public class Automator {
                     Charset.defaultCharset());
             String[] lineArr;
             int lineCount = 0;
+            boolean skip, comment;
             for (String line : lines) {
             	++lineCount;
-            	lineArr = line.split(" ");
-            	if(lineArr[0].equals(line) || lineArr[0].startsWith("#")) {
+            	lineArr = line.trim().split(" ");
+            	skip = lineArr[0].equals(line);
+            	comment = lineArr[0].startsWith("#");
+            	if(skip || comment) {
+            		if(comment) {
+            			System.out.println(line);
+            		}
             		continue;
             	}
                 Chirp.main(lineArr);

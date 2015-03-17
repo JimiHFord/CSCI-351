@@ -206,6 +206,7 @@ public class UndirectedGraph {
 	public static UndirectedGraph scaleFreeGraph(Random prng, final int v, 
 			final int k, double p, CricketObserver o) {
 		UndirectedGraph g = new UndirectedGraph(v, o);
+//		boolean[] 
 		
 		return null;
 	}
