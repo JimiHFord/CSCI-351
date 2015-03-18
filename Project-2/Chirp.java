@@ -11,6 +11,8 @@ public class Chirp {
 							 OUTPUT_IMAGE_INDEX = 3,
 							 SEED_INDEX = 4,
 							 K_INDEX = 4,
+							 DE_INDEX = 4,
+							 DE_SEED_INDEX = 5,
 							 EDGE_PROBABILITY_INDEX = 5,
 							 K_SEED_INDEX = 5,
 							 REWIRE_PROBABILITY_INDEX = 6;
@@ -18,7 +20,7 @@ public class Chirp {
 	public static void main(String[] args) {
 		if(args.length != 4 && args.length != 5 && 
 				args.length != 6 && args.length != 7) usage();
-		int crickets = 0, ticks = 0, k = 0;
+		int crickets = 0, ticks = 0, k = 0, dE = 0;
 		long seed = 0;
 		double prob = 0;
 		char mode;
@@ -84,7 +86,15 @@ public class Chirp {
 			}
 			break;
 		case 'f':
-			throw new UnsupportedOperationException("Not implemented");
+			try {
+				dE = Integer.parseInt(args[DE_INDEX]);
+				seed = Long.parseLong(args[DE_SEED_INDEX]);
+				g = UndirectedGraph.scaleFreeGraph(new Random(seed), crickets, dE, o);
+			} catch (NumberFormatException e) {
+				error("<dE> and <seed> must be numeric");
+			}/* catch (IndexOutOfBoundsException e) {
+				error("<dE> and <seed> must be supplied");
+			}*/
 		}
 
 		g.vertices.get(0).forceChirp();
@@ -118,7 +128,7 @@ public class Chirp {
 			handleOutput(description,sync);
 			break;
 		case 'f': // SCALE-FREE GRAPH
-			description = "Scale-free V = " + crickets +", k = " + k + ":";
+			description = "Scale-free V = " + crickets +", dE = " + dE + ":";
 			handleOutput(description,sync);
 			break;
 		}

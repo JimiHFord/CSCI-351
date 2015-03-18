@@ -40,7 +40,7 @@ public class Vertex {
 	 * 
 	 * @return the number of edges connected to this vertex
 	 */
-	public int edgeCount() {
+	public int degree() {
 		return edges.size();
 	}
 	
