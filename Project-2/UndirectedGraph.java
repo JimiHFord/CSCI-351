@@ -75,7 +75,7 @@ public class UndirectedGraph {
 			if(current.equals(goal)) {
 				return distance;
 			}
-			for(int i = 0; i < current.edgeCount(); i++) {
+			for(int i = 0; i < current.degree(); i++) {
 				t2 = current.getEdges().get(i).other(current);
 				if(!visited[t2.n]) {
 					visited[t2.n] = true;
@@ -185,29 +185,84 @@ public class UndirectedGraph {
 		}
 		return g;
 	}
-	/*
-	Degree distribution of a graph
-	The fractions of vertices having degree 0, 1, 2, etc.
-	Relevance to computer networks: Influences average distance and diameter
-	Also characterizes the structure of the graph (network)
-	How to compute—make a histogram:
-	count[d] = Number of vertices of degree d,  0 ≤ d ≤ V−1
-	pr[d] = count[d] / V
-	Entropy of a graph
-	A single number H derived from the degree distribution
-	Measures how random the graph is—the higher the entropy, the greater the randomness
-	How to compute:
-	            V−1	 
-	H (bits) = − Σ pr[d] log2 pr[d]
-	           d = 0	 
-	(Omit terms where pr[d] = 0)
-	log2 x = log x / log 2
-	*/
+	
 	public static UndirectedGraph scaleFreeGraph(Random prng, final int v, 
-			final int k, double p, CricketObserver o) {
+			final int dE, CricketObserver o) {
 		UndirectedGraph g = new UndirectedGraph(v, o);
 //		boolean[] 
+		int edgeCount = 0;
+		int c0 = prng.nextInt(v);
+		int c1 = (c0 + 1) % v;
+		int c2 = (c1 + 1) % v;
+		Cricket a = g.vertices.get(c0), b = g.vertices.get(c1), c = g.vertices.get(c2);
+		UndirectedEdge edge = new UndirectedEdge(edgeCount++, a, b);
+		g.edges.add(edge);
+		edge = new UndirectedEdge(edgeCount++, b, c);
+		g.edges.add(edge);
+		edge = new UndirectedEdge(edgeCount++, a, c);
+		g.edges.add(edge);
+		// we have 3 fully connected vertices now
+		Cricket[] others = new Cricket[v-3];
+		for(int other = 0, i = 0; i < v; i++) {
+			if(i != c0 && i != c1 && i != c2) {
+				others[other++] = g.vertices.get(i);
+			}
+		}
+		// the rest are contained in others
+		int[] prob;
+		Cricket next, temp;
+		ArrayList<Cricket> existing = new ArrayList<Cricket>();
+		existing.add(a); existing.add(b); existing.add(c);
+		for(int i = 0; i < others.length; i++) {
+			next = others[i];
+			existing.add(next);
+			if(existing.size() <= dE) {
+				for(int e = 0; e < existing.size(); e++) {
+					temp = existing.get(e);
+					if(next.equals(temp)) continue;
+					edge = new UndirectedEdge(edgeCount++, temp, next);
+					g.edges.add(edge);
+				}
+			} else {
+				// potential bug - when do i add in the current vertex to the 
+				// probability distribution?
+				for(int e = 0, sumD = sumDeg(g); e < dE; e++, sumD = sumDeg(g)) {
+					prob = new int[sumD];
+					setProbabilityDistribution(g, prob);
+					do {
+						int chosen = (int) Math.floor(prng.nextDouble() * prob.length);
+						temp = g.vertices.get(prob[chosen]);
+					} while(next.directFlight(temp));
+					edge = new UndirectedEdge(edgeCount++, next, temp);
+					g.edges.add(edge);
+				}
+			}
+		}
 		
-		return null;
+		return g;
+	}
+	
+	private static void setProbabilityDistribution(UndirectedGraph g, int[] prob) {
+		Vertex v;
+		int degree = 0;
+		int counter = 0;
+		for(int i = 0; i < g.v; i++) {
+			v = g.vertices.get(i);
+			degree = v.degree();
+			for(int j = counter; j < degree + counter; j++) {
+				prob[j] = v.n;
+			}
+			counter += degree;
+		}
+	}
+	
+	private static int sumDeg(UndirectedGraph g) {
+		int retval = 0;
+		Vertex v;
+		for(int i = 0; i < g.v; i++) {
+			v = g.vertices.get(i);
+			retval += v.degree();
+		}
+		return retval;
 	}
 }

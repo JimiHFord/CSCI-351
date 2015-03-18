@@ -19,7 +19,7 @@ public class Cricket extends Vertex {
 	public void emitChirp() {
 		if(willChirp) {
 			willChirp = false;
-			int n = super.edgeCount();
+			int n = super.degree();
 			for(int i = 0; i < n; i++) {
 				edges.get(i).other(this).hearChirp();
 			}
@@ -42,7 +42,8 @@ public class Cricket extends Vertex {
 	
 	public boolean directFlight(Cricket other) {
 		boolean retval = false;
-		int e = super.edgeCount();
+		if(equals(other)) return true;
+		int e = super.degree();
 		Cricket o;
 		for(int i = 0; i < e && !retval; i++) {
 			o = super.edges.get(i).other(this);
