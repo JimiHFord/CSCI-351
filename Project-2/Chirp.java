@@ -2,7 +2,11 @@ import java.io.IOException;
 
 import edu.rit.util.Random;
 
-
+/**
+ * 
+ * @author jimiford
+ *
+ */
 public class Chirp {
 
 	private static final int GRAPH_TYPE_INDEX = 0,
@@ -92,9 +96,9 @@ public class Chirp {
 				g = UndirectedGraph.scaleFreeGraph(new Random(seed), crickets, dE, o);
 			} catch (NumberFormatException e) {
 				error("<dE> and <seed> must be numeric");
-			}/* catch (IndexOutOfBoundsException e) {
+			} catch (IndexOutOfBoundsException e) {
 				error("<dE> and <seed> must be supplied");
-			}*/
+			}
 		}
 
 		g.vertices.get(0).forceChirp();
@@ -153,7 +157,9 @@ public class Chirp {
 	private static void usage() {
 		System.err.println("usage: java Chirp <graph type> <num vertices> <num ticks> "
 				+ "<output image> {(<seed> <edge probability>), or "
-				+ "(<k>), or (<k> <seed> <rewire probability>)}");
+				+ "(<k>), or "
+				+ "(<k> <seed> <rewire probability>), or "
+				+ "(<dE> <seed>)}");
 		System.exit(1);
 	}
 }

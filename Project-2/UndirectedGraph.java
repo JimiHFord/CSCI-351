@@ -226,9 +226,10 @@ public class UndirectedGraph {
 			} else {
 				// potential bug - when do i add in the current vertex to the 
 				// probability distribution?
-				for(int e = 0, sumD = sumDeg(g); e < dE; e++, sumD = sumDeg(g)) {
-					prob = new int[sumD];
-					setProbabilityDistribution(g, prob);
+				int sumD = sumDeg(g);
+				prob = new int[sumD];
+				setProbabilityDistribution(g, prob);
+				for(int e = 0; e < dE; e++) {
 					do {
 						int chosen = (int) Math.floor(prng.nextDouble() * prob.length);
 						temp = g.vertices.get(prob[chosen]);

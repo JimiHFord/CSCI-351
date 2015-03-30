@@ -4,7 +4,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-
+/**
+ * 
+ * @author jimiford
+ *
+ */
 public class Automator {
 
 	public static void main(String[] args) {
@@ -40,6 +44,9 @@ public class Automator {
         }
 	}
 	
+	/**
+	 * display usage message and exit
+	 */
 	private static void usage() {
 		System.err.println("usage: java Automator <automation file>");
 		System.exit(1);
