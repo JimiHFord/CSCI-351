@@ -5,9 +5,14 @@ import java.nio.file.Paths;
 import java.util.List;
 
 /**
+ * This class automates many calls to the Chirp main method
+ * by using command line arguments from an automation file.
  * 
- * @author jimiford
- *
+ * Each line in the file must either be commented out with
+ * a '#', or be a valid command for Chirp.java.
+ * 
+ * @author Jimi Ford (jhf3617)
+ * @version 3-31-2015
  */
 public class Automator {
 
@@ -52,6 +57,10 @@ public class Automator {
 		System.exit(1);
 	}
 	
+	/**
+	 * print error message and call usage()
+	 * @param msg
+	 */
 	private static void error(String msg) {
 		System.err.println(msg);
 		usage();
