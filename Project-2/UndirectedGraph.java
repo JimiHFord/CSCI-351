@@ -25,11 +25,7 @@ public class UndirectedGraph {
 	private ArrayList<UndirectedEdge> edges;
 	public ArrayList<Cricket> vertices;
 	private int v;
-		
-	// Prevent construction
-	private UndirectedGraph() {
-		
-	}
+	
 	
 	/**
 	 * Private constructor used internally by the static random graph
@@ -136,7 +132,8 @@ public class UndirectedGraph {
 	 * @param p edge probability between vertices
 	 * @return the randomly generated graph
 	 */
-	public static UndirectedGraph randomGraph(Random prng, int v, double p, CricketObserver o) {
+	public static UndirectedGraph randomGraph(Random prng, int v, double p, 
+			CricketObserver o) {
 		UndirectedGraph g = new UndirectedGraph(v, o);
 		UndirectedEdge edge;
 		Cricket a, b;
@@ -160,11 +157,13 @@ public class UndirectedGraph {
 		return kregularGraph(v, 1, o);
 	}
 	
-	public static UndirectedGraph kregularGraph(int v, int k, CricketObserver o) {
+	public static UndirectedGraph kregularGraph(int v, int k, 
+			CricketObserver o) {
 		return smallWorldGraph(null, v, k, 0, o);
 	}
 	
-	public static UndirectedGraph smallWorldGraph(Random prng, final int v, int k, double p, CricketObserver o) {
+	public static UndirectedGraph smallWorldGraph(Random prng, final int v, 
+			int k, double p, CricketObserver o) {
 		UndirectedGraph g = new UndirectedGraph(v, o);
 		UndirectedEdge edge;
 		Cricket a, b, c;
@@ -194,7 +193,8 @@ public class UndirectedGraph {
 		int c0 = prng.nextInt(v);
 		int c1 = (c0 + 1) % v;
 		int c2 = (c1 + 1) % v;
-		Cricket a = g.vertices.get(c0), b = g.vertices.get(c1), c = g.vertices.get(c2);
+		Cricket a = g.vertices.get(c0), b = g.vertices.get(c1), 
+				c = g.vertices.get(c2);
 		UndirectedEdge edge = new UndirectedEdge(edgeCount++, a, b);
 		g.edges.add(edge);
 		edge = new UndirectedEdge(edgeCount++, b, c);
@@ -231,7 +231,8 @@ public class UndirectedGraph {
 				setProbabilityDistribution(g, prob);
 				for(int e = 0; e < dE; e++) {
 					do {
-						int chosen = (int) Math.floor(prng.nextDouble() * prob.length);
+						int chosen = (int) Math.floor(prng.nextDouble() * 
+								prob.length);
 						temp = g.vertices.get(prob[chosen]);
 					} while(next.directFlight(temp));
 					edge = new UndirectedEdge(edgeCount++, next, temp);
@@ -243,7 +244,8 @@ public class UndirectedGraph {
 		return g;
 	}
 	
-	private static void setProbabilityDistribution(UndirectedGraph g, int[] prob) {
+	private static void setProbabilityDistribution(UndirectedGraph g, 
+			int[] prob) {
 		Vertex v;
 		int degree = 0;
 		int counter = 0;
