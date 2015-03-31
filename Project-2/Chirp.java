@@ -1,11 +1,22 @@
-import java.io.IOException;
+//******************************************************************************
+//
+// File:    Chirp.java
+// Package: ---
+// Unit:    Class Chirp
+//
+//******************************************************************************
 
+import java.io.IOException;
 import edu.rit.util.Random;
 
 /**
+ * Chirp runs a simulation of crickets chirping at night. The phenomenon we are
+ * interested in studying is that some types of networks synchronize in how they
+ * chirp. Based on the command line parameters, chirp tests the type of network
+ * and determines what time the crickets syncrhonize.
  * 
- * @author jimiford
- *
+ * @author Jimi Ford (jhf3617)
+ * @version 3-31-2015
  */
 public class Chirp {
 
@@ -21,6 +32,10 @@ public class Chirp {
 							 K_SEED_INDEX = 5,
 							 REWIRE_PROBABILITY_INDEX = 6;
 	
+	/**
+	 * main method
+	 * @param args command line arguments
+	 */
 	public static void main(String[] args) {
 		if(args.length != 4 && args.length != 5 && 
 				args.length != 6 && args.length != 7) usage();
@@ -56,11 +71,13 @@ public class Chirp {
 			try {
 				seed = Long.parseLong(args[SEED_INDEX]);
 				prob = Double.parseDouble(args[EDGE_PROBABILITY_INDEX]);
-				g = UndirectedGraph.randomGraph(new Random(seed), crickets, prob, o);
+				g = UndirectedGraph.randomGraph(
+						new Random(seed), crickets, prob, o);
 			} catch(NumberFormatException e) {
 				error("<seed> and <edge probability> must be numeric");
 			} catch(IndexOutOfBoundsException e) {
-				error("<seed> and <edge probability> must be included with random graph mode");
+				error("<seed> and <edge probability> must be included with "
+						+ "random graph mode");
 			}
 			break;
 		case 'c': // CYCLE GRAPH
@@ -81,19 +98,22 @@ public class Chirp {
 				k = Integer.parseInt(args[K_INDEX]);
 				prob = Double.parseDouble(args[REWIRE_PROBABILITY_INDEX]);
 				seed = Long.parseLong(args[K_SEED_INDEX]);
-				g = UndirectedGraph.smallWorldGraph(new Random(seed), crickets, k, prob, o);
+				g = UndirectedGraph.smallWorldGraph(
+						new Random(seed), crickets, k, prob, o);
 			} catch (NumberFormatException e) {
-				error("<k> must be an integer < V, <rewire probability> must be a number "
+				error("<k> must be an integer < V, <rewire probability> "
+						+ "must be a number "
 						+ "between 0 and 1, and <seed> must be numeric");
 			} catch (IllegalArgumentException e) {
 				error("<k> must be < the number of crickets");
 			}
 			break;
-		case 'f':
+		case 'f': // SCALE-FREE GRAPH
 			try {
 				dE = Integer.parseInt(args[DE_INDEX]);
 				seed = Long.parseLong(args[DE_SEED_INDEX]);
-				g = UndirectedGraph.scaleFreeGraph(new Random(seed), crickets, dE, o);
+				g = UndirectedGraph.scaleFreeGraph(
+						new Random(seed), crickets, dE, o);
 			} catch (NumberFormatException e) {
 				error("<dE> and <seed> must be numeric");
 			} catch (IndexOutOfBoundsException e) {
@@ -139,6 +159,12 @@ public class Chirp {
 		
 	}
 	
+	/**
+	 * handle printing the results of the simulation
+	 * @param description the description of what kind of graph is being printed
+	 * @param sync time at which the network synchronized 
+	 * 		(-1 for not synchronized)
+	 */
 	private static void handleOutput(String description, int sync) {
 		System.out.print(description);
 		if(sync >= 0) {
@@ -149,13 +175,21 @@ public class Chirp {
 		}
 	}
 	
+	/**
+	 * print an error message and call usage()
+	 * @param msg
+	 */
 	private static void error(String msg) {
 		System.err.println(msg);
 		usage();
 	}
 	
+	/**
+	 * usage message called when program improperly used
+	 */
 	private static void usage() {
-		System.err.println("usage: java Chirp <graph type> <num vertices> <num ticks> "
+		System.err.println(
+				"usage: java Chirp <graph type> <num vertices> <num ticks> "
 				+ "<output image> {(<seed> <edge probability>), or "
 				+ "(<k>), or "
 				+ "(<k> <seed> <rewire probability>), or "
