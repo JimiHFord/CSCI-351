@@ -79,7 +79,7 @@ public class Cricket extends Vertex {
 	 */
 	public boolean directFlight(Cricket other) {
 		boolean retval = false;
-		if(equals(other)) return true;
+		if(this.equals(other)) return true;
 		int e = super.degree();
 		Cricket o;
 		for(int i = 0; i < e && !retval; i++) {

@@ -8,8 +8,10 @@
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
 import edu.rit.pj2.vbl.DoubleVbl;
 import edu.rit.util.Random;
+import edu.rit.util.Searching;
 
 /**
  * Class UndirectedGraph represents an undirected graph meaning that if
@@ -111,6 +113,10 @@ public class UndirectedGraph {
 		}
 	}
 	
+	/**
+	 * simulate time passing
+	 * @param tick the current time tick
+	 */
 	public void tick(int tick) {
 		Cricket c;
 		for(int i = 0; i < v; i++) {
@@ -153,15 +159,38 @@ public class UndirectedGraph {
 		return g;
 	}
 	
+	/**
+	 * create a cycle graph
+	 * @param v number of vertices
+	 * @param o cricket observer crickets should report to
+	 * @return constructed cycle graph
+	 */
 	public static UndirectedGraph cycleGraph(int v, CricketObserver o) {
 		return kregularGraph(v, 1, o);
 	}
 	
+	/**
+	 * create a k-regular graph
+	 * @param v number of vertices
+	 * @param k number of adjacent vertices left and right of given vertex to
+	 * connect to
+	 * @param o cricket observer the crickets should report to
+	 * @return the constructed k-regular graph
+	 */
 	public static UndirectedGraph kregularGraph(int v, int k, 
 			CricketObserver o) {
 		return smallWorldGraph(null, v, k, 0, o);
 	}
 	
+	/**
+	 * create a small-world graph
+	 * @param prng pseudorandom number generator
+	 * @param v number of vertices
+	 * @param k the initial k-regular graph to modify
+	 * @param p edge rewire probability
+	 * @param o cricket observer the crickets should report to
+	 * @return the constructed small-world graph
+	 */
 	public static UndirectedGraph smallWorldGraph(Random prng, final int v, 
 			int k, double p, CricketObserver o) {
 		UndirectedGraph g = new UndirectedGraph(v, o);
@@ -185,6 +214,14 @@ public class UndirectedGraph {
 		return g;
 	}
 	
+	/**
+	 * create a scale-free graph
+	 * @param prng psuedorandom number generator to use
+	 * @param v number of vertices
+	 * @param dE number of edges to add to each additional vertex
+	 * @param o cricket observer the crickets should report to
+	 * @return the scale-free graph generated
+	 */
 	public static UndirectedGraph scaleFreeGraph(Random prng, final int v, 
 			final int dE, CricketObserver o) {
 		UndirectedGraph g = new UndirectedGraph(v, o);
@@ -209,10 +246,12 @@ public class UndirectedGraph {
 			}
 		}
 		// the rest are contained in others
-		int[] prob;
+		double[] cum = new double[v];
+		double[] deg = new double[v];
 		Cricket next, temp;
 		ArrayList<Cricket> existing = new ArrayList<Cricket>();
 		existing.add(a); existing.add(b); existing.add(c);
+		Searching.Double h = new Searching.Double();
 		for(int i = 0; i < others.length; i++) {
 			next = others[i];
 			existing.add(next);
@@ -226,15 +265,15 @@ public class UndirectedGraph {
 			} else {
 				// potential bug - when do i add in the current vertex to the 
 				// probability distribution?
-				int sumD = sumDeg(g);
-				prob = new int[sumD];
-				setProbabilityDistribution(g, prob);
+				setDegreeDistribution(g, deg);
+				
 				for(int e = 0; e < dE; e++) {
-					do {
-						int chosen = (int) Math.floor(prng.nextDouble() * 
-								prob.length);
-						temp = g.vertices.get(prob[chosen]);
-					} while(next.directFlight(temp));
+					setProbabilityDistribution(deg, cum);
+					double nr = prng.nextDouble();
+					double ch = cum[cum.length-1]*nr;
+					int vertex = Searching.searchInterval(cum, ch, h);
+					deg[vertex] = 0;
+					temp = g.vertices.get(vertex);
 					edge = new UndirectedEdge(edgeCount++, next, temp);
 					g.edges.add(edge);
 				}
@@ -244,28 +283,16 @@ public class UndirectedGraph {
 		return g;
 	}
 	
-	private static void setProbabilityDistribution(UndirectedGraph g, 
-			int[] prob) {
-		Vertex v;
-		int degree = 0;
-		int counter = 0;
+	private static void setDegreeDistribution(UndirectedGraph g, double[] deg) {
 		for(int i = 0; i < g.v; i++) {
-			v = g.vertices.get(i);
-			degree = v.degree();
-			for(int j = counter; j < degree + counter; j++) {
-				prob[j] = v.n;
-			}
-			counter += degree;
+			deg[i] = g.vertices.get(i).degree();
 		}
 	}
 	
-	private static int sumDeg(UndirectedGraph g) {
-		int retval = 0;
-		Vertex v;
-		for(int i = 0; i < g.v; i++) {
-			v = g.vertices.get(i);
-			retval += v.degree();
+	private static void setProbabilityDistribution(double deg[], double[] cum) {
+		double cumulative = 0;
+		for(int i = 0; i < deg.length; i++) {
+			cum[i] = cumulative += deg[i];
 		}
-		return retval;
 	}
 }
