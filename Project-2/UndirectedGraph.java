@@ -8,7 +8,6 @@
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-
 import edu.rit.pj2.vbl.DoubleVbl;
 import edu.rit.util.Random;
 import edu.rit.util.Searching;
@@ -263,10 +262,7 @@ public class UndirectedGraph {
 					g.edges.add(edge);
 				}
 			} else {
-				// potential bug - when do i add in the current vertex to the 
-				// probability distribution?
 				setDegreeDistribution(g, deg);
-				
 				for(int e = 0; e < dE; e++) {
 					setProbabilityDistribution(deg, cum);
 					double nr = prng.nextDouble();
@@ -283,12 +279,22 @@ public class UndirectedGraph {
 		return g;
 	}
 	
+	/**
+	 * set the degree distribution of a given graph
+	 * @param g the given graph
+	 * @param deg the degree distribution of the graph
+	 */
 	private static void setDegreeDistribution(UndirectedGraph g, double[] deg) {
 		for(int i = 0; i < g.v; i++) {
 			deg[i] = g.vertices.get(i).degree();
 		}
 	}
 	
+	/**
+	 * set the cumulative sum of the degree array
+	 * @param deg degrees of a graph
+	 * @param cum cumulative sum of the degree
+	 */
 	private static void setProbabilityDistribution(double deg[], double[] cum) {
 		double cumulative = 0;
 		for(int i = 0; i < deg.length; i++) {
