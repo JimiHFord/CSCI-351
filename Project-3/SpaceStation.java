@@ -22,7 +22,7 @@ public class SpaceStation {
 	/**
 	 * maximum distance a space station can transmit
 	 */
-	public static final double MAX_DISTANCE = 20.0E6;
+	public static final double MAX_DISTANCE = 40.0E6;
 	
 	public final double x;
 	public final double y;

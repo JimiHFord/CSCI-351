@@ -20,16 +20,26 @@ public class SpaceNetwork {
 	 */
 	public final int n;
 	
+	private boolean connected;
+	
 	private double[][] adj;
+	private double[][] shortest;
 	private SpaceStation[] stations;
 	
-	
-	public SpaceNetwork(Random prng, int n) {
+	/**
+	 * 
+	 * @param prng
+	 * @param n
+	 */
+	public SpaceNetwork(Random prng, final int n) {
 		this.n = n;
 		this.adj = new double[n][n];
+		this.shortest = new double[n][n];
 		this.stations = new SpaceStation[n];
 		initStations(prng);
 		initAdjacency();
+		floydWarshall();
+		checkConnectivity();
 	}
 	
 	private void initStations(Random prng) {
@@ -61,6 +71,39 @@ public class SpaceNetwork {
 			}
 		}
 	}
+
+	private void floydWarshall() {
+		System.arraycopy(adj, 0, shortest, 0, n);
+		double s_i_j, s_i_k, s_k_j;
+		for(int k = 0; k < n; k++) {
+			for(int i = 0; i < n; i++) {
+				for(int j = 0; j < n; j++) {
+					s_i_j = shortest[i][j];
+					s_i_k = shortest[i][k];
+					s_k_j = shortest[k][j];
+					if(s_i_j > s_i_k + s_k_j) {
+						shortest[i][j] = s_i_k + s_k_j;
+					}
+				}
+			}
+		}		
+	}
+	
+	private void checkConnectivity() {
+		boolean connected = true;
+		double temp;
+		for(int i = 0; i < n && connected; i++) {
+			for(int j = 0; j < n && connected; j++) {
+				temp = shortest[i][j];
+				connected = !Double.isInfinite(temp);
+			}
+		}
+		this.connected = connected;
+	}
+	
+	public boolean isConnected() {
+		return connected;
+	}
 	
 	public SpaceStation get(int n) {
 		return stations[n];
@@ -70,16 +113,30 @@ public class SpaceNetwork {
 		return adj[i][j];
 	}
 	
+	public double fw(int i, int j) {
+		return shortest[i][j];
+	}
+	
 	public static void main(String[] args) {
 		int n = Integer.parseInt(args[1]);
-		SpaceNetwork sn = new SpaceNetwork(new Random(Long.parseLong(args[0])),
-				n);
+		Random r = new Random(Long.parseLong(args[0]));
+		SpaceNetwork sn;
+		for(int i = 0; i < n; i++) {
+			sn = new SpaceNetwork(r, n);
+			System.out.println(sn.isConnected() ? "connected" : "NOT connected");
+		}
+		
+	}
+	
+	
+	private static void print(SpaceNetwork sn) {
+		int n = sn.n;
 		for(int i = 0; i < n; i++) {
 			for(int j = 0; j < n; j++) {
-				if(Double.isInfinite(sn.adj(i, j))) {
+				if(Double.isInfinite(sn.fw(i, j))) {
 					System.out.print(-1 + ", ");
 				} else {
-					System.out.print(sn.adj(i, j)+", ");
+					System.out.print(sn.fw(i, j)+", ");
 				}
 				
 			}
