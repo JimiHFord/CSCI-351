@@ -63,11 +63,4 @@ public class SpaceStation {
 				((other.y - y)*(other.y - y)) +
 				((other.z - z)*(other.z - z));
 	}
-	
-	public static void main(String[] args) {
-		SpaceStation s1 = new SpaceStation(0, 0,0,0);
-		SpaceStation s2 = new SpaceStation(1, 4,3,0);
-		System.out.println(s1.distance(s2));
-		System.out.println(s1.powerNeeded(s2));
-	}
 }

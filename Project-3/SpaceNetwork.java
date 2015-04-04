@@ -1,3 +1,4 @@
+import edu.rit.pj2.vbl.DoubleVbl;
 import edu.rit.util.Random;
 
 //******************************************************************************
@@ -117,30 +118,14 @@ public class SpaceNetwork {
 		return shortest[i][j];
 	}
 	
-	public static void main(String[] args) {
-		int n = Integer.parseInt(args[1]);
-		Random r = new Random(Long.parseLong(args[0]));
-		SpaceNetwork sn;
+	public void accumulatePower(DoubleVbl.Mean power) {
+		double temp;
 		for(int i = 0; i < n; i++) {
-			sn = new SpaceNetwork(r, n);
-			System.out.println(sn.isConnected() ? "connected" : "NOT connected");
-		}
-		
-	}
-	
-	
-	private static void print(SpaceNetwork sn) {
-		int n = sn.n;
-		for(int i = 0; i < n; i++) {
-			for(int j = 0; j < n; j++) {
-				if(Double.isInfinite(sn.fw(i, j))) {
-					System.out.print(-1 + ", ");
-				} else {
-					System.out.print(sn.fw(i, j)+", ");
-				}
-				
+			for(int j = i + 1; j < n; j++) {
+				temp = shortest[i][j];
+				if(!Double.isInfinite(temp) && temp != 0)
+					power.accumulate(temp);
 			}
-			System.out.println();
 		}
 	}
 }
