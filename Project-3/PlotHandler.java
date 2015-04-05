@@ -115,7 +115,6 @@ public class PlotHandler {
 				System.err.println("Error in file " + args[i]);
 			}
 		}
-		
 	}
 	
 	/**
