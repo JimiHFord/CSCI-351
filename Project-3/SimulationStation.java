@@ -1,8 +1,3 @@
-import java.io.IOException;
-
-import edu.rit.pj2.Task;
-import edu.rit.util.AList;
-
 //******************************************************************************
 //
 // File:    SimulationStation.java
@@ -10,6 +5,10 @@ import edu.rit.util.AList;
 // Unit:    Class SimulationStation
 //
 //******************************************************************************
+
+import java.io.IOException;
+import edu.rit.pj2.Task;
+import edu.rit.util.AList;
 
 /**
  * Class runs a number of trials simulating a network of space stations
@@ -58,17 +57,21 @@ public class SimulationStation extends Task {
 		AList<SimulationResult> results = new AList<SimulationResult>();
 		for(int vertices = lowerBound; vertices <= upperBound; 
 				vertices += increment) {
-			// public Simulator(Task ref, int v, int trials, long seed) {
 			results.addLast(
 					new Simulator(this, vertices, trials, seed).simulate());
 		}
 		try {
 			new PlotHandler(filePrefix, results).write();
+			new TableHandler(filePrefix, results).write();
 		} catch (IOException e) {
-			error("Error writing results file using prefix: ");
+			error("Error writing results file(s) using prefix: " + filePrefix);
 		}
+		
 	}
 
+	/**
+	 * print usage statement and gracefully exit
+	 */
 	private static void usage() {
 		System.err.println("java pj2 SimulationStation "
 				+ "<lower_bound_stations> "
@@ -80,6 +83,10 @@ public class SimulationStation extends Task {
 		System.exit(1);
 	}
 	
+	/**
+	 * print an error message and call the usage() method
+	 * @param msg the error message to print
+	 */
 	private static void error(String msg) {
 		System.err.println(msg);
 		usage();

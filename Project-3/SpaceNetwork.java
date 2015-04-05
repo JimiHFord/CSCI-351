@@ -1,6 +1,3 @@
-import edu.rit.pj2.vbl.DoubleVbl;
-import edu.rit.util.Random;
-
 //******************************************************************************
 //
 // File:    SpaceNetwork.java
@@ -9,7 +6,14 @@ import edu.rit.util.Random;
 //
 //******************************************************************************
 
+import edu.rit.pj2.vbl.DoubleVbl;
+import edu.rit.util.Random;
+
+
 /**
+ * Class models a network of space stations placed in random positions in 3D
+ * space. The space stations' locations are limited to 
+ * 1E8 million kilometers X 1E8 million kilometers X 1E8 million kilometers.
  * 
  * @author Jimi Ford (jhf3617)
  * @version 4-2-2015
@@ -17,20 +21,26 @@ import edu.rit.util.Random;
 public class SpaceNetwork {
 
 	/**
+	 * maximum dimension value allowed in 3D space
+	 */
+	public static final double MAX_DIM = 1.0E8;
+	
+	/**
 	 * number of space stations
 	 */
 	public final int n;
 	
+	// private data members
 	private boolean connected;
-	
 	private double[][] adj;
 	private double[][] shortest;
 	private SpaceStation[] stations;
 	
 	/**
+	 * Construct a SpaceNetwork
 	 * 
-	 * @param prng
-	 * @param n
+	 * @param prng the pseudorandom number generator to use
+	 * @param n the number of space stations in this network
 	 */
 	public SpaceNetwork(Random prng, final int n) {
 		this.n = n;
@@ -43,16 +53,24 @@ public class SpaceNetwork {
 		checkConnectivity();
 	}
 	
+	/**
+	 * initialize the coordinates of the <TT>n</TT> stations
+	 * @param prng the pseudorandom number generator to get random numbers from
+	 */
 	private void initStations(Random prng) {
 		double x, y, z;
 		for(int i = 0; i < n; i++) {
-			x = prng.nextDouble() * SpaceStation.MAX_DIM;
-			y = prng.nextDouble() * SpaceStation.MAX_DIM;
-			z = prng.nextDouble() * SpaceStation.MAX_DIM;
+			x = prng.nextDouble() * MAX_DIM;
+			y = prng.nextDouble() * MAX_DIM;
+			z = prng.nextDouble() * MAX_DIM;
 			stations[i] = new SpaceStation(i, x, y, z);
 		}
 	}
 	
+	/**
+	 * initialize the weights of the edges between nodes with the power needed
+	 * to transmit from one station to another
+	 */
 	private void initAdjacency() {
 		SpaceStation s1, s2;
 		double distance, power;
@@ -73,6 +91,12 @@ public class SpaceNetwork {
 		}
 	}
 
+	/**
+	 * Run Floyd-Warshall on the space network to determine all-pairs shortest
+	 * paths. This will tell us the least amount of power a station needs to 
+	 * transmit to any other station in the network by forwarding the message
+	 * along the shortest path to that station.
+	 */
 	private void floydWarshall() {
 		System.arraycopy(adj, 0, shortest, 0, n);
 		double s_i_j, s_i_k, s_k_j;
@@ -90,6 +114,9 @@ public class SpaceNetwork {
 		}		
 	}
 	
+	/**
+	 * Check if the network is connected
+	 */
 	private void checkConnectivity() {
 		boolean connected = true;
 		double temp;
@@ -102,22 +129,29 @@ public class SpaceNetwork {
 		this.connected = connected;
 	}
 	
+	/**
+	 * get whether the network is connected or not
+	 * @return true if the network is fully-connected
+	 */
 	public boolean isConnected() {
 		return connected;
 	}
 	
-	public SpaceStation get(int n) {
+	/**
+	 * get a space station
+	 * @param n the unique identifier of the space station
+	 * @return the space station with identifier = n
+	 */
+	private SpaceStation get(int n) {
 		return stations[n];
 	}
 	
-	public double adj(int i, int j) {
-		return adj[i][j];
-	}
-	
-	public double fw(int i, int j) {
-		return shortest[i][j];
-	}
-	
+	/**
+	 * Accumulate the powers needed to transmit messages into a thread-local 
+	 * copy of a DoubleVbl.Mean. This is what averages the powers across
+	 * multiple networks
+	 * @param power
+	 */
 	public void accumulatePower(DoubleVbl.Mean power) {
 		double temp;
 		for(int i = 0; i < n; i++) {

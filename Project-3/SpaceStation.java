@@ -7,27 +7,39 @@
 //******************************************************************************
 
 /**
+ * Class models a space station floating around in 3D space. This class contains
+ * the math needed to calculate distances to other stations and the power needed
+ * to transmit to them.
  * 
  * @author Jimi Ford (jhf3617)
  * @version 4-2-2015
  *
  */
 public class SpaceStation {
-
-	/**
-	 * maximum dimension value allowed in 3D space
-	 */
-	public static final double MAX_DIM = 1.0E8;
 	
 	/**
 	 * maximum distance a space station can transmit
 	 */
 	public static final double MAX_DISTANCE = 40.0E6;
 	
+	/**
+	 * the station's x-coordinate
+	 */
 	public final double x;
+	
+	/**
+	 * the station's y-coordinate
+	 */
 	public final double y;
+	
+	/**
+	 * the station's z-coordinate
+	 */
 	public final double z;
 	
+	/**
+	 * the station's unique identifier
+	 */
 	public final int id;
 	
 	/**
