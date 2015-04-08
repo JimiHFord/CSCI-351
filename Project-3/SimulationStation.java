@@ -65,8 +65,7 @@ public class SimulationStation extends Task {
 			new TableHandler(filePrefix, results).write();
 		} catch (IOException e) {
 			error("Error writing results file(s) using prefix: " + filePrefix);
-		}
-		
+		}	
 	}
 
 	/**
