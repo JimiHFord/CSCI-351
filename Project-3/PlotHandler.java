@@ -74,7 +74,9 @@ public class PlotHandler {
             .xAxisTitle ("Number of Nodes <I>V</I>")
             .xAxisTickFormat(new DecimalFormat("0"))
             .yAxisTitle ("Average Power Needed")
-            .yAxisTickFormat (new DecimalFormat ("0E0"))
+            .leftMargin(84)
+            .yAxisTitleOffset(60)
+            .yAxisTickFormat (new DecimalFormat ("0.0E0"))
             .seriesDots(null)
             .seriesStroke (Strokes.solid(2))
             .xySeries (averagePowerSeries);
