@@ -9,7 +9,6 @@
 import edu.rit.pj2.vbl.DoubleVbl;
 import edu.rit.util.Random;
 
-
 /**
  * Class models a network of space stations placed in random positions in 3D
  * space. The space stations' locations are limited to 
