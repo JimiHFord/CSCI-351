@@ -66,7 +66,7 @@ public class Simulator {
 			}
 			
 			// (Non-javadoc)
-			public void run(int i) throws Exception {
+			public void run(int i) {
 				SpaceNetwork sn = new SpaceNetwork(prng, v);
 				if(sn.isConnected()) {
 					thrCount.item++;
