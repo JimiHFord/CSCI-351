@@ -38,7 +38,7 @@ public class Generator
 	 * @param  treq    Request mean interarrival time.
 	 * @param  nreq    Number of requests.
 	 * @param  prng    Pseudorandom number generator.
-	 * @param  source  Server.
+	 * @param  source  First host in network sending the packets.
 	 */
 	public Generator (Simulation sim, double treq, int nreq, Random prng,
 			Routable source, Link link) {

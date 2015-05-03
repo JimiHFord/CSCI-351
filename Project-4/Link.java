@@ -25,8 +25,8 @@ public class Link {
 		this.ready = true;
 	}
 	
-	public Routable other(Routable other) {
-		return this.l1.equals(other) ? l2 : l1;
+	public Routable other(Routable current) {
+		return this.l1.equals(current) ? l2 : l1;
 	}
 	
 	public boolean ready() {
