@@ -3,6 +3,9 @@ import edu.rit.numeric.Series;
 import edu.rit.numeric.plot.Plot;
 import edu.rit.sim.Simulation;
 import edu.rit.util.Random;
+
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 
 /**
@@ -14,17 +17,15 @@ import java.text.DecimalFormat;
  */
 public class MrPotatoHead
 {
-	private static double tproc;
 	private static double rlb;
 	private static double rub;
 	private static double rdelta;
-	private static int qmax;
 	private static int nreq;
 	private static long seed;
 
 	private static Random prng;
 	private static Simulation sim;
-//	private static Host server;
+	private static String prefix;
 	private static Generator generator;
 
 	/**
@@ -33,21 +34,17 @@ public class MrPotatoHead
 	public static void main(String[] args)
 	{
 		// Parse command line arguments.
-		if (args.length != 7) usage();
-		tproc = Double.parseDouble (args[0]);
-		rlb = Double.parseDouble (args[1]);
-		rub = Double.parseDouble (args[2]);
-		rdelta = Double.parseDouble (args[3]);
-		qmax = Integer.parseInt (args[4]);
-		nreq = Integer.parseInt (args[5]);
-		seed = Long.parseLong (args[6]);
-
+		if (args.length != 5 && args.length != 6) usage();
+		rlb = Double.parseDouble (args[0]);
+		rub = Double.parseDouble (args[1]);
+		rdelta = Double.parseDouble (args[2]);
+		if(rlb <= 0) rlb = rdelta;
+		nreq = Integer.parseInt (args[3]);
+		seed = Long.parseLong (args[4]);
+		prefix = args.length == 6 ? args[5] : "potato-";
 		// Set up pseudorandom number generator.
 		prng = new Random (seed);
 
-		
-//		a.
-		
 		// Set up plot data series.
 		ListXYSeries respTimeSeries = new ListXYSeries();
 		ListXYSeries dropFracSeries = new ListXYSeries();
@@ -78,9 +75,12 @@ public class MrPotatoHead
 				bc = new Link(b, c),
 				bd = new Link(b, d),
 				cd = new Link(c, d);
+			// preferred link
 			a.setPrimary(ad);
 			b.setPrimary(bd);
 			c.setPrimary(cd);
+			
+			// secondary links
 			a.addSecondary(ab);
 			a.addSecondary(ac);
 			b.addSecondary(ab);
@@ -114,15 +114,14 @@ public class MrPotatoHead
 		}
 
 		// Display plots.
-		new Plot()
+		Plot responseTime = new Plot()
 		.plotTitle ("Response Time")
 		.xAxisTitle ("Mean arrival rate (req/sec)")
 		.yAxisTitle ("Mean response time (sec)")
+		.yAxisTickFormat (new DecimalFormat ("0.0"))
 		.seriesDots (null)
-		.xySeries (respTimeSeries)
-		.getFrame()
-		.setVisible (true);
-		new Plot()
+		.xySeries (respTimeSeries);
+		Plot dropFraction = new Plot()
 		.plotTitle ("Drop Fraction")
 		.xAxisTitle ("Mean arrival rate (req/sec)")
 		.yAxisTitle ("Drop fraction")
@@ -130,8 +129,18 @@ public class MrPotatoHead
 		.yAxisEnd (1.0)
 		.yAxisTickFormat (new DecimalFormat ("0.0"))
 		.seriesDots (null)
-		.xySeries (dropFracSeries)
+		.xySeries (dropFracSeries);
+		try {
+			Plot.write(responseTime, new File(prefix + "response-time.dwg"));
+			Plot.write(dropFraction, new File(prefix + "drop-fraction.dwg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		dropFraction
 		.getFrame()
+		.setVisible (true);
+		responseTime.getFrame()
 		.setVisible (true);
 	}
 
@@ -140,12 +149,11 @@ public class MrPotatoHead
 	 */
 	private static void usage()
 	{
-		System.err.println ("Usage: java WebSim06 <tproc> <rlb> <rub> <rdelta> <qmax> <nreq> <seed>");
-		System.err.println ("<tproc> = Mean request processing time");
+		System.err.println ("Usage: java MrPotatoHead <rlb> <rub> <rdelta> "
+				+ "<nreq> <seed>");
 		System.err.println ("<rlb> = Mean request rate lower bound");
 		System.err.println ("<rub> = Mean request rate upper bound");
 		System.err.println ("<rdelta> = Mean request rate delta");
-		System.err.println ("<qmax> = Maximum queue size");
 		System.err.println ("<nreq> = Number of requests");
 		System.err.println ("<seed> = Random seed");
 		System.exit (1);
