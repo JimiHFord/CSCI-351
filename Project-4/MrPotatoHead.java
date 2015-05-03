@@ -11,16 +11,19 @@ import edu.rit.numeric.Series;
 import edu.rit.numeric.plot.Plot;
 import edu.rit.sim.Simulation;
 import edu.rit.util.Random;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
 
 /**
- * Class WebSim06 is the web server simulation main program, version 6.
+ * Class MrPotatoHead is the hot potato simulation main program.
  *
  * @author  Alan Kaminsky
  * @author Jimi Ford (jhf3617)
- * @version 22-Apr-2015
+ * @version 5-3-2015
  */
 public class MrPotatoHead
 {
@@ -147,9 +150,10 @@ public class MrPotatoHead
 		try {
 			Plot.write(responseTime, new File(prefix + "traversal-time.dwg"));
 			Plot.write(dropFraction, new File(prefix + "drop-fraction.dwg"));
-			System.out.print(builder.toString());
+			PrintWriter tableWriter = new PrintWriter(prefix + "table.tsv");
+			tableWriter.print(builder.toString());
+			tableWriter.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		dropFraction
