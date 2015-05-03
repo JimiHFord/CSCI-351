@@ -18,7 +18,7 @@ import edu.rit.util.Random;
  */
 public class Packet
 {
-	public static final int BIT_RATE = 9600;
+	public static final int BIT_RATE = Link.BIT_RATE;
 	public final int size;
 	
 	private static int idCounter = 0;
@@ -44,6 +44,8 @@ public class Packet
 		this.startTime = sim.time();
 		this.size = prng.nextDouble() < .5 ? 
 				40 * Byte.SIZE : 576 * Byte.SIZE;
+//		this.size = 40 * Byte.SIZE;
+//		this.size = 576 * Byte.SIZE;
 		this.respTimeSeries = series;
 	}
 	

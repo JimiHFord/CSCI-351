@@ -17,7 +17,7 @@ import edu.rit.util.Random;
  */
 public class Router extends Routable {
 
-	public static final int BIT_RATE = 9600;
+	
 	
 	private final Random prng;
 	private Link primary;

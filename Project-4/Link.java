@@ -13,6 +13,8 @@
  */
 public class Link {
 
+	public static final int BIT_RATE = 9600;
+	
 	private final Routable l1;
 	private final Routable l2;
 	private boolean ready;
