@@ -58,11 +58,11 @@ public class MrPotatoHead
 
 		// Sweep mean request rate.
 		System.out.printf ("Mean\tResp\tResp%n");
-		System.out.printf ("Req\tTime\tTime\tReqs\tReqs\tDrop%n");
+		System.out.printf ("Pkt\tTime\tTime\tPkts\tPkts\tDrop%n");
 		System.out.printf ("Rate\tMean\tStddev\tProc'd\tDrop'd\tFrac%n");
 		StringBuilder builder = new StringBuilder();
 		builder.append(String.format("Mean\tResp\tResp%n"));
-		builder.append(String.format("Req\tTime\tTime\tReqs\tReqs\tDrop%n"));
+		builder.append(String.format("Pkt\tTime\tTime\tPkts\tPkts\tDrop%n"));
 		builder.append(
 				String.format("Rate\tMean\tStddev\tProc'd\tDrop'd\tFrac%n"));
 		double rate;
@@ -129,15 +129,15 @@ public class MrPotatoHead
 
 		// Display plots.
 		Plot responseTime = new Plot()
-		.plotTitle ("Response Time")
-		.xAxisTitle ("Mean arrival rate (req/sec)")
-		.yAxisTitle ("Mean response time (sec)")
+		.plotTitle ("Traversal Time")
+		.xAxisTitle ("Mean arrival rate (pkt/sec)")
+		.yAxisTitle ("Mean traversal time (sec)")
 		.yAxisTickFormat (new DecimalFormat ("0.0"))
 		.seriesDots (null)
 		.xySeries (respTimeSeries);
 		Plot dropFraction = new Plot()
 		.plotTitle ("Drop Fraction")
-		.xAxisTitle ("Mean arrival rate (req/sec)")
+		.xAxisTitle ("Mean arrival rate (pkt/sec)")
 		.yAxisTitle ("Drop fraction")
 		.yAxisStart (0.0)
 		.yAxisEnd (1.0)
@@ -145,7 +145,7 @@ public class MrPotatoHead
 		.seriesDots (null)
 		.xySeries (dropFracSeries);
 		try {
-			Plot.write(responseTime, new File(prefix + "response-time.dwg"));
+			Plot.write(responseTime, new File(prefix + "traversal-time.dwg"));
 			Plot.write(dropFraction, new File(prefix + "drop-fraction.dwg"));
 			System.out.print(builder.toString());
 		} catch (IOException e) {
@@ -166,10 +166,10 @@ public class MrPotatoHead
 	{
 		System.err.println ("Usage: java MrPotatoHead <rlb> <rub> <rdelta> "
 				+ "<nreq> <seed>");
-		System.err.println ("<rlb> = Mean request rate lower bound");
-		System.err.println ("<rub> = Mean request rate upper bound");
-		System.err.println ("<rdelta> = Mean request rate delta");
-		System.err.println ("<nreq> = Number of requests");
+		System.err.println ("<rlb> = Mean packet rate lower bound");
+		System.err.println ("<rub> = Mean packet rate upper bound");
+		System.err.println ("<rdelta> = Mean packet rate delta");
+		System.err.println ("<nreq> = Number of packets");
 		System.err.println ("<seed> = Random seed");
 		System.exit (1);
 	}
