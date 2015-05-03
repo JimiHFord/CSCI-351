@@ -1,3 +1,11 @@
+//******************************************************************************
+//
+// File:    Packet.java
+// Package: ---
+// Unit:    Packet Link
+//
+//******************************************************************************
+
 import edu.rit.numeric.ListSeries;
 import edu.rit.sim.Simulation;
 import edu.rit.util.Random;
@@ -71,6 +79,6 @@ public class Packet
 	 */
 	public String toString()
 	{
-		return "Request " + id;
+		return "Packet " + id;
 	}
 }

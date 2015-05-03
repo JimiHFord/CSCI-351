@@ -1,6 +1,18 @@
+//******************************************************************************
+//
+// File:    ShuffleHelper.java
+// Package: ---
+// Unit:    Class ShuffleHelper
+//
+//******************************************************************************
+
 import edu.rit.util.Random;
 
-
+/**
+ * 
+ * @author Jimi Ford (jhf3617)
+ * @version 5-3-2015
+ */
 public class ShuffleHelper {
 
 	public static void shuffleArray(Random prng, int[] array) {

@@ -1,9 +1,16 @@
+//******************************************************************************
+//
+// File:    MrPotatoHead.java
+// Package: ---
+// Unit:    Class MrPotatoHead
+//
+//******************************************************************************
+
 import edu.rit.numeric.ListXYSeries;
 import edu.rit.numeric.Series;
 import edu.rit.numeric.plot.Plot;
 import edu.rit.sim.Simulation;
 import edu.rit.util.Random;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -53,6 +60,11 @@ public class MrPotatoHead
 		System.out.printf ("Mean\tResp\tResp%n");
 		System.out.printf ("Req\tTime\tTime\tReqs\tReqs\tDrop%n");
 		System.out.printf ("Rate\tMean\tStddev\tProc'd\tDrop'd\tFrac%n");
+		StringBuilder builder = new StringBuilder();
+		builder.append(String.format("Mean\tResp\tResp%n"));
+		builder.append(String.format("Req\tTime\tTime\tReqs\tReqs\tDrop%n"));
+		builder.append(
+				String.format("Rate\tMean\tStddev\tProc'd\tDrop'd\tFrac%n"));
 		double rate;
 		for (int i = 0; (rate = rlb + i*rdelta) <= rub; ++ i)
 		{
@@ -107,7 +119,9 @@ public class MrPotatoHead
 			double dropfrac = (double)ndrop/(double)nreq;
 			System.out.printf ("%.3f\t%.3f\t%.3f\t%d\t%d\t%.3f%n",
 					rate, stats.mean, stats.stddev, nproc, ndrop, dropfrac);
-
+			builder.append(String.format(
+					"%.3f\t%.3f\t%.3f\t%d\t%d\t%.3f%n",
+					rate, stats.mean, stats.stddev, nproc, ndrop, dropfrac));
 			// Record results for plot.
 			respTimeSeries.add (rate, stats.mean);
 			dropFracSeries.add (rate, dropfrac);
@@ -133,6 +147,7 @@ public class MrPotatoHead
 		try {
 			Plot.write(responseTime, new File(prefix + "response-time.dwg"));
 			Plot.write(dropFraction, new File(prefix + "drop-fraction.dwg"));
+			System.out.print(builder.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
