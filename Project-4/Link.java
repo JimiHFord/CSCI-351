@@ -13,15 +13,34 @@
  */
 public class Link {
 
-	private final Linkable l1;
-	private final Linkable l2;
+	private final Routable l1;
+	private final Routable l2;
+	private boolean ready;
 	
-	public Link(Linkable l1, Linkable l2) {
+	public Link(Routable l1, Routable l2) {
 		this.l1 = l1;
 		this.l2 = l2;
+		this.ready = true;
 	}
 	
-	public Linkable other(Linkable other) {
+	public Routable other(Routable other) {
 		return this.l1.equals(other) ? l2 : l1;
+	}
+	
+	public boolean ready() {
+		return this.ready;
+	}
+	
+	/**
+	 * 
+	 * @throws IllegalStateException if the link is not ready to be closed
+	 */
+	public void close() throws IllegalStateException {
+		if(!this.ready) throw new IllegalStateException();
+		this.ready = false;
+	}
+	
+	public void open() {
+		this.ready = true;
 	}
 }
