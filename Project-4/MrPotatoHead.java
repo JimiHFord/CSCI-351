@@ -105,8 +105,6 @@ public class MrPotatoHead
 			d.addSecondary(ad);
 			d.addSecondary(bd);
 			d.addSecondary(cd);
-			// Set up one server.
-//			server = new Host (sim);
 
 			// Set up request generator and generate first request.
 			generator = new Generator (sim, 1.0/rate, nreq, prng, h1, 
