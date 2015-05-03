@@ -1,3 +1,11 @@
+//******************************************************************************
+//
+// File:    Generator.java
+// Package: ---
+// Unit:    Class Generator
+//
+//******************************************************************************
+
 import edu.rit.numeric.ExponentialPrng;
 import edu.rit.numeric.ListSeries;
 import edu.rit.numeric.Series;
