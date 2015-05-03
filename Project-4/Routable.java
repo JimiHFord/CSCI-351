@@ -16,10 +16,25 @@ import edu.rit.sim.Simulation;
  */
 public abstract class Routable {
 
+	private static int count = 0;
+	
 	protected Simulation sim;
+	private final int id;
+	
 	
 	public Routable(Simulation sim) {
 		this.sim = sim;
+		id = ++ count;
+	}
+	
+	public boolean equals(Object o) {
+		if(o == this) {
+			return true;
+		} 
+		if(o instanceof Routable) {
+			return this.id == ((Routable)o).id;
+		}
+		return false;
 	}
 	
 	public abstract void receivePacket(Packet packet, Link link);
