@@ -108,7 +108,7 @@ public class MrPotatoHead
 
 			// Set up request generator and generate first request.
 			generator = new Generator (sim, 1.0/rate, nreq, prng, h1, 
-					new Link(h1, a));
+					new Link(true, h1, a));
 
 			// Run the simulation.
 			sim.run();
