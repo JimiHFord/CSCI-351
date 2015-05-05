@@ -18,7 +18,7 @@ import edu.rit.util.Random;
  */
 public class Packet
 {
-	public static final int BIT_RATE = Link.BIT_RATE;
+	public static final int BIT_RATE = Link.DEFAULT_BIT_RATE;
 	public final int size;
 	
 	private static int idCounter = 0;
@@ -49,8 +49,11 @@ public class Packet
 		this.respTimeSeries = series;
 	}
 	
-	public double transmitTime() {
-		return ((double)size) / BIT_RATE;
+	public double transmitTime(Link link) {
+		if(link.infiniteBitRate) {
+			return 0;
+		}
+		return ((double)size) / link.bitRate;
 	}
 	
 	/**

@@ -40,9 +40,10 @@ public abstract class Routable {
 	public abstract void receivePacket(Packet packet, Link link);
 	
 	public void startSending(final Packet packet, final Link link) {
-		link.close();
 		final Routable other = link.other(this);
-		sim.doAfter(packet.transmitTime(), new Event() {
+		final double transmitTime = packet.transmitTime(link);
+		link.close();
+		sim.doAfter(transmitTime, new Event() {
 			public void perform() {
 				other.receivePacket(packet, link);
 			}
