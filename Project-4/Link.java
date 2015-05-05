@@ -13,22 +13,25 @@
  */
 public class Link {
 
-	public static final int BIT_RATE = 9600;
+	public static final int DEFAULT_BIT_RATE = 9600;
 	
 	private final Routable l1;
 	private final Routable l2;
-	public final boolean infiniteBandwidth;
+	public final boolean infiniteBitRate;
+	public final double bitRate;
 	private boolean ready;
 	
 	public Link(Routable l1, Routable l2) {
 		this(false, l1, l2);
 	}
 	
-	public Link(boolean infiniteBandwidth, Routable l1, Routable l2) {
+	public Link(boolean infiniteBitRate, Routable l1, Routable l2) {
 		this.l1 = l1;
 		this.l2 = l2;
 		this.ready = true;
-		this.infiniteBandwidth = infiniteBandwidth;
+		this.infiniteBitRate = infiniteBitRate;
+		this.bitRate = infiniteBitRate ? Double.POSITIVE_INFINITY : 
+			DEFAULT_BIT_RATE;
 	}
 	
 	public Routable other(Routable current) {
@@ -45,7 +48,7 @@ public class Link {
 	 * this link has finite bandwidth
 	 */
 	public void close() throws IllegalStateException {
-		if(!this.infiniteBandwidth) {
+		if(!this.infiniteBitRate) {
 			if(!this.ready) {
 				throw new IllegalStateException();
 			}

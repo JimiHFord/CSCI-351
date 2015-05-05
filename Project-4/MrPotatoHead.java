@@ -51,7 +51,7 @@ public class MrPotatoHead
 		if(rlb <= 0) rlb = rdelta;
 		nreq = Integer.parseInt (args[3]);
 		seed = Long.parseLong (args[4]);
-		prefix = args.length == 6 ? args[5] : "potato-";
+		prefix = args.length == 6 ? args[5] : "potato";
 		// Set up pseudorandom number generator.
 		prng = new Random (seed);
 
@@ -87,9 +87,15 @@ public class MrPotatoHead
 				ab = new Link(a, b), 
 				ac = new Link(a, c),
 				ad = new Link(a, d),
+				ba = new Link(b, a),
 				bc = new Link(b, c),
 				bd = new Link(b, d),
-				cd = new Link(c, d);
+				ca = new Link(c, a),
+				cb = new Link(c, b),
+				cd = new Link(c, d),
+				da = new Link(d, a),
+				db = new Link(d, b),
+				dc = new Link(d, c);
 			// preferred link
 			a.setPrimary(ad);
 			b.setPrimary(bd);
@@ -98,13 +104,13 @@ public class MrPotatoHead
 			// secondary links
 			a.addSecondary(ab);
 			a.addSecondary(ac);
-			b.addSecondary(ab);
+			b.addSecondary(ba);
 			b.addSecondary(bc);
-			c.addSecondary(ac);
-			c.addSecondary(bc);
-			d.addSecondary(ad);
-			d.addSecondary(bd);
-			d.addSecondary(cd);
+			c.addSecondary(ca);
+			c.addSecondary(cb);
+			d.addSecondary(da);
+			d.addSecondary(db);
+			d.addSecondary(dc);
 
 			// Set up request generator and generate first request.
 			generator = new Generator (sim, 1.0/rate, nreq, prng, h1, 
@@ -128,37 +134,14 @@ public class MrPotatoHead
 			dropFracSeries.add (rate, dropfrac);
 		}
 
-		// Display plots.
-		Plot responseTime = new Plot()
-		.plotTitle ("Traversal Time")
-		.xAxisTitle ("Mean arrival rate (pkt/sec)")
-		.yAxisTitle ("Mean traversal time (sec)")
-		.yAxisTickFormat (new DecimalFormat ("0.0"))
-		.seriesDots (null)
-		.xySeries (respTimeSeries);
-		Plot dropFraction = new Plot()
-		.plotTitle ("Drop Fraction")
-		.xAxisTitle ("Mean arrival rate (pkt/sec)")
-		.yAxisTitle ("Drop fraction")
-		.yAxisStart (0.0)
-		.yAxisEnd (1.0)
-		.yAxisTickFormat (new DecimalFormat ("0.0"))
-		.seriesDots (null)
-		.xySeries (dropFracSeries);
 		try {
-			Plot.write(responseTime, new File(prefix + "traversal-time.dwg"));
-			Plot.write(dropFraction, new File(prefix + "drop-fraction.dwg"));
-			PrintWriter tableWriter = new PrintWriter(prefix + "table.tsv");
+			new PlotHandler(prefix, dropFracSeries, respTimeSeries).write();
+			PrintWriter tableWriter = new PrintWriter(prefix + "-table.tsv");
 			tableWriter.print(builder.toString());
 			tableWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		dropFraction
-		.getFrame()
-		.setVisible (true);
-		responseTime.getFrame()
-		.setVisible (true);
 	}
 
 	/**
@@ -167,11 +150,11 @@ public class MrPotatoHead
 	private static void usage()
 	{
 		System.err.println ("Usage: java MrPotatoHead <rlb> <rub> <rdelta> "
-				+ "<nreq> <seed>");
+				+ "<npkt> <seed>");
 		System.err.println ("<rlb> = Mean packet rate lower bound");
 		System.err.println ("<rub> = Mean packet rate upper bound");
 		System.err.println ("<rdelta> = Mean packet rate delta");
-		System.err.println ("<nreq> = Number of packets");
+		System.err.println ("<npkt> = Number of packets");
 		System.err.println ("<seed> = Random seed");
 		System.exit (1);
 	}
