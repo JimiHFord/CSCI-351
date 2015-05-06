@@ -10,11 +10,17 @@ import edu.rit.util.Random;
 
 /**
  * 
+ * 
  * @author Jimi Ford (jhf3617)
  * @version 5-3-2015
  */
 public class ShuffleHelper {
 
+	/**
+	 * 
+	 * @param prng
+	 * @param array
+	 */
 	public static void shuffleArray(Random prng, int[] array) {
 		for (int i = array.length - 1; i > 0; i--) {
 			int index = prng.nextInt(i + 1);
