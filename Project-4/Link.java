@@ -7,45 +7,93 @@
 //******************************************************************************
 
 /**
+ * Class Link represents a connection between two routable objects. Links are
+ * <I>closed</I> if a packet is currently transmitting on them and <I>open</I> 
+ * if they are ready to be transmitted on.
  * 
  * @author Jimi Ford (jhf3617)
- *
+ * @version 5-6-2015
  */
 public class Link {
 
+	/**
+	 * default bit rate used in this project 
+	 * <P>9600 bits/sec</P>
+	 */
 	public static final int DEFAULT_BIT_RATE = 9600;
 	
-	private final Routable l1;
-	private final Routable l2;
+	/**
+	 * true if this link has an infinite bit rate
+	 */
 	public final boolean infiniteBitRate;
+	
+	/**
+	 * the bit rate of this link
+	 */
 	public final double bitRate;
+	
+	// private data members
+	
+	private final Routable r1;
+	private final Routable r2;
 	private boolean ready;
 	
-	public Link(Routable l1, Routable l2) {
-		this(false, l1, l2);
+	
+	/**
+	 * construct a link with the default finit bit rate between two routables
+	 * 
+	 * @param r1 one of the routable objects
+	 * @param r2 the other routable object
+	 */
+	public Link(Routable r1, Routable r2) {
+		this(false, r1, r2);
 	}
 	
-	public Link(boolean infiniteBitRate, Routable l1, Routable l2) {
-		this.l1 = l1;
-		this.l2 = l2;
+	/**
+	 * construct a link with specified finite or infinite bit rate
+	 * 
+	 * @param infiniteBitRate set to true for infinite bit rate, false for 
+	 * default finite bit rate
+	 * @param r1 one of the routable objects
+	 * @param r2 the other routable object
+	 */
+	public Link(boolean infiniteBitRate, Routable r1, Routable r2) {
+		this.r1 = r1;
+		this.r2 = r2;
 		this.ready = true;
 		this.infiniteBitRate = infiniteBitRate;
 		this.bitRate = infiniteBitRate ? Double.POSITIVE_INFINITY : 
 			DEFAULT_BIT_RATE;
 	}
 	
+	/**
+	 * get the other routable object attached to this link compared to the
+	 * current one
+	 * 
+	 * @param current the current routable object querying for the other 
+	 * attached routable object
+	 * @return the routable object that is not equal to the current one
+	 */
 	public Routable other(Routable current) {
-		return this.l1.equals(current) ? l2 : l1;
+		return this.r1.equals(current) ? r2 : r1;
 	}
 	
+	/**
+	 * get the current state of the link
+	 * 
+	 * @return true if the link is ready to pass another packet along it; false
+	 * otherwise
+	 */
 	public boolean ready() {
 		return this.ready;
 	}
 	
 	/**
+	 * close this link off so that other packets may not be transmitted on it
+	 * until open() is called
 	 * 
 	 * @throws IllegalStateException if the link is not ready to be closed and
-	 * this link has finite bandwidth
+	 * this link has a finite bit-rate
 	 */
 	public void close() throws IllegalStateException {
 		if(!this.infiniteBitRate) {
@@ -56,6 +104,9 @@ public class Link {
 		} 
 	}
 	
+	/**
+	 * open this link so that other packets may be transmitted on it
+	 */
 	public void open() {
 		this.ready = true;
 	}

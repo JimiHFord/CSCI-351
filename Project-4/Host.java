@@ -31,8 +31,13 @@ public class Host extends Routable
 		super(sim);
 	}
 
-	@Override
-	public void receivePacket(Packet packet, Link link) {
+	/**
+	 * Called when this routable object finished receiving a packet on a certain
+	 * link
+	 * @param packet the packet this object received
+	 * @param link the link that the packet was received on
+	 */
+	public void receivePacket(final Packet packet, final Link link) {
 		link.open();
 		packet.finish();
 	}

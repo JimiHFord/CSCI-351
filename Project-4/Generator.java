@@ -22,10 +22,12 @@ import edu.rit.util.Random;
  */
 public class Generator
 {
+	// private data members
+	
 	private Simulation sim;
-	private ExponentialPrng treqPrng;
+	private ExponentialPrng tpktPrng;
 	private Random prng;
-	private int nreq;
+	private int npkt;
 	private Routable source;
 	private Link link;
 	private ListSeries respTimeSeries;
@@ -35,16 +37,16 @@ public class Generator
 	 * Create a new request generator.
 	 *
 	 * @param  sim     Simulation.
-	 * @param  treq    Request mean interarrival time.
-	 * @param  nreq    Number of requests.
+	 * @param  tpkt    Request mean interarrival time.
+	 * @param  npkt    Number of requests.
 	 * @param  prng    Pseudorandom number generator.
 	 * @param  source  First host in network sending the packets.
 	 */
-	public Generator (Simulation sim, double treq, int nreq, Random prng,
+	public Generator (Simulation sim, double tpkt, int npkt, Random prng,
 			Routable source, Link link) {
 		this.sim = sim;
-		this.treqPrng = new ExponentialPrng (prng, 1.0/treq);
-		this.nreq = nreq;
+		this.tpktPrng = new ExponentialPrng (prng, 1.0/tpkt);
+		this.npkt = npkt;
 		this.source = source;
 		this.prng = prng;
 		respTimeSeries = new ListSeries();
@@ -61,8 +63,8 @@ public class Generator
 			source.startSending (new Packet (prng, sim, respTimeSeries), link);
 		}
 		++ n;
-		if (n < nreq) {
-			sim.doAfter (treqPrng.next(), new Event() {
+		if (n < npkt) {
+			sim.doAfter (tpktPrng.next(), new Event() {
 				public void perform() {
 					generatePacket();
 				}
@@ -93,6 +95,6 @@ public class Generator
 	 * Returns the drop fraction of the generated requests.
 	 */
 	public double dropFraction() {
-		return (double)(nreq - respTimeSeries.length())/(double)nreq;
+		return (double)(npkt - respTimeSeries.length())/(double)npkt;
 	}
 }

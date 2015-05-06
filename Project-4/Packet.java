@@ -11,19 +11,29 @@ import edu.rit.sim.Simulation;
 import edu.rit.util.Random;
 
 /**
- * Class Request provides a request in the web simulation.
+ * Class Packet provides a packet model in the web simulation. It contains the
+ * logic necessary to determine the size of the packet and the amount of time
+ * it would take to transmit along a link.
  *
  * @author  Alan Kaminsky
- * @version 18-Apr-2014
+ * @author Jimi Ford (jhf3617)
+ * @version 5-6-2015
  */
 public class Packet
 {
-	public static final int BIT_RATE = Link.DEFAULT_BIT_RATE;
+	/**
+	 * size of the packet in bits
+	 */
 	public final int size;
 	
-	private static int idCounter = 0;
-
-	private int id;
+	/**
+	 * unique identifier across all other packets
+	 */
+	public final int id;
+	
+	// private data member
+	
+	private static int idCounter = 0;	
 	private Simulation sim;
 	private double startTime;
 	private double finishTime;
@@ -31,12 +41,11 @@ public class Packet
 
 
 	/**
-	 * Construct a new request. The request's start time is set to the current
-	 * simulation time. The request's response time will be recorded in the
-	 * given series.
-	 *
-	 * @param  sim     Simulation.
-	 * @param  series  Response time series.
+	 * Construct a new packet. The packet's response time will be recorded in
+	 * the ListSeries.
+	 * @param prng a pseudorandom number generator
+	 * @param sim the current simulation object
+	 * @param series the series to keep track of response times in
 	 */
 	public Packet(Random prng, Simulation sim, ListSeries series) {
 		this.id = ++ idCounter;
@@ -44,11 +53,15 @@ public class Packet
 		this.startTime = sim.time();
 		this.size = prng.nextDouble() < .5 ? 
 				40 * Byte.SIZE : 576 * Byte.SIZE;
-//		this.size = 40 * Byte.SIZE;
-//		this.size = 576 * Byte.SIZE;
 		this.respTimeSeries = series;
 	}
 	
+	/**
+	 * get the time it would take this packet to transmit along a given link
+	 * 
+	 * @param link the given link to transmit on
+	 * @return the time in seconds it would take to transmit on the given link
+	 */
 	public double transmitTime(Link link) {
 		if(link.infiniteBitRate) {
 			return 0;
@@ -64,7 +77,7 @@ public class Packet
 	public void finish()
 	{
 		finishTime = sim.time();
-		if (respTimeSeries != null) respTimeSeries.add (responseTime());
+		respTimeSeries.add (responseTime());
 	}
 
 	/**

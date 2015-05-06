@@ -8,15 +8,10 @@
 
 import edu.rit.numeric.ListXYSeries;
 import edu.rit.numeric.Series;
-import edu.rit.numeric.plot.Plot;
 import edu.rit.sim.Simulation;
 import edu.rit.util.Random;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DecimalFormat;
 
 /**
  * Class MrPotatoHead is the hot potato simulation main program.
@@ -39,7 +34,7 @@ public class MrPotatoHead
 	private static Generator generator;
 
 	/**
-	 * Main program.
+	 * Main program to simulate hot-potato routing
 	 */
 	public static void main(String[] args)
 	{
@@ -150,12 +145,14 @@ public class MrPotatoHead
 	private static void usage()
 	{
 		System.err.println ("Usage: java MrPotatoHead <rlb> <rub> <rdelta> "
-				+ "<npkt> <seed>");
+				+ "<npkt> <seed> [<file-prefix> (optional)]");
 		System.err.println ("<rlb> = Mean packet rate lower bound");
 		System.err.println ("<rub> = Mean packet rate upper bound");
 		System.err.println ("<rdelta> = Mean packet rate delta");
 		System.err.println ("<npkt> = Number of packets");
 		System.err.println ("<seed> = Random seed");
+		System.err.println ("<file-prefix> = optional file prefix, "
+				+ "default = \"potato\"");
 		System.exit (1);
 	}
 }
