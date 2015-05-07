@@ -37,15 +37,15 @@ public class Generator
 	 * Create a new request generator.
 	 *
 	 * @param  sim     Simulation.
-	 * @param  tpkt    Request mean interarrival time.
+	 * @param  rpkt    Request mean rate.
 	 * @param  npkt    Number of requests.
 	 * @param  prng    Pseudorandom number generator.
 	 * @param  source  First host in network sending the packets.
 	 */
-	public Generator (Simulation sim, double tpkt, int npkt, Random prng,
+	public Generator (Simulation sim, double rpkt, int npkt, Random prng,
 			Routable source, Link link) {
 		this.sim = sim;
-		this.tpktPrng = new ExponentialPrng (prng, 1.0/tpkt);
+		this.tpktPrng = new ExponentialPrng (prng, rpkt);
 		this.npkt = npkt;
 		this.source = source;
 		this.prng = prng;
