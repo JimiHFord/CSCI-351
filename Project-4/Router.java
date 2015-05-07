@@ -74,8 +74,9 @@ public class Router extends Routable {
 			link = primary;
 		} else if(secondary.size() > 0) {
 			
-			int[] indices = ShuffleHelper.array(secondary.size());
-			ShuffleHelper.shuffleArray(prng, indices);
+			int[] indices = ShuffleHelper.shuffledArray(prng, secondary.size());
+//			int[] indices = ShuffleHelper.array(secondary.size());
+//			ShuffleHelper.shuffleArray(prng, indices);
 			
 			for(int i = 0; i < indices.length && !goodToGo; i++) {
 				link = secondary.get(indices[i]);

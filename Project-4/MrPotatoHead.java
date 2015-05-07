@@ -74,7 +74,6 @@ public class MrPotatoHead
 			h1 = new Host(sim);
 			h2 = new Host(sim);
 			d = new Router(prng, sim);
-			d.setPrimary(new Link(d, h2));
 			a = new Router(prng, sim);
 			b = new Router(prng, sim);
 			c = new Router(prng, sim);
@@ -95,7 +94,7 @@ public class MrPotatoHead
 			a.setPrimary(ad);
 			b.setPrimary(bd);
 			c.setPrimary(cd);
-			
+			d.setPrimary(new Link(d, h2));
 			// secondary links
 			a.addSecondary(ab);
 			a.addSecondary(ac);
@@ -108,7 +107,7 @@ public class MrPotatoHead
 			d.addSecondary(dc);
 
 			// Set up request generator and generate first request.
-			generator = new Generator (sim, 1.0/rate, nreq, prng, h1, 
+			generator = new Generator (sim, rate, nreq, prng, h1, 
 					new Link(true, h1, a));
 
 			// Run the simulation.
