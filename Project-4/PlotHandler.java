@@ -79,9 +79,10 @@ public class PlotHandler {
 	}
 	
 	/**
-	 * Save the plot information into files and display the plots.
+	 * Save the plot information into files.
 	 * 
 	 * @param titlePrefix Prefix of the plot's title
+	 * @param yFormat decimal format of the traversal time y-axis labels
 	 * @param df drop fraction series
 	 * @param dfFile drop fraction file name
 	 * @param rt response time series
@@ -108,8 +109,6 @@ public class PlotHandler {
 		.xySeries (df);
 		Plot.write(responseTime, new File(rtFile));
 		Plot.write(dropFraction, new File(dfFile));
-//		responseTime.getFrame().setVisible (true);
-//		dropFraction.getFrame().setVisible (true);
 	}
 	
 	/**

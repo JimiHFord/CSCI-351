@@ -31,7 +31,7 @@ public class MrPotatoHead
 	private static Random prng;
 	private static Simulation sim;
 	private static String prefix;
-	private static Generator generator;
+	private static Generator gen;
 
 	/**
 	 * Main program to simulate hot-potato routing
@@ -59,14 +59,16 @@ public class MrPotatoHead
 		ListXYSeries dropFracSmallSeries = new ListXYSeries();
 		
 		// Sweep mean request rate.
-		System.out.printf ("Mean\tResp\tResp%n");
-		System.out.printf ("Pkt\tTime\tTime\tPkts\tPkts\tDrop%n");
-		System.out.printf ("Rate\tMean\tStddev\tProc'd\tDrop'd\tFrac%n");
+		System.out.printf ("Mean\tResp\tResp\tResp\tDrop\tDrop\tDrop%n");
+		System.out.printf ("Pkt\tTime\tTime\tTime\tFrac\tFrac\tFrac%n");
+		System.out.printf ("Rate\tTotal\tLarge\tSmall\tTotal\tLarge\tSmall%n");
 		StringBuilder builder = new StringBuilder();
-		builder.append(String.format("Mean\tResp\tResp%n"));
-		builder.append(String.format("Pkt\tTime\tTime\tPkts\tPkts\tDrop%n"));
 		builder.append(
-				String.format("Rate\tMean\tStddev\tProc'd\tDrop'd\tFrac%n"));
+			String.format("Mean\tResp\tResp\tResp\tDrop\tDrop\tDrop%n"));
+		builder.append(
+			String.format("Pkt\tTime\tTime\tTime\tFrac\tFrac\tFrac%n"));
+		builder.append(
+			String.format("Rate\tTotal\tLarge\tSmall\tTotal\tLarge\tSmall%n"));
 		double rate;
 		for (int i = 0; (rate = rlb + i*rdelta) <= rub; ++ i)
 		{
@@ -111,33 +113,32 @@ public class MrPotatoHead
 			d.addSecondary(dc);
 
 			// Set up request generator and generate first request.
-			generator = new Generator (sim, rate, nreq, prng, h1, 
+			gen = new Generator (sim, rate, nreq, prng, h1, 
 					new Link(true, h1, a));
 
 			// Run the simulation.
 			sim.run();
 
 			// Print results.
-			Series.Stats totalStats = generator.responseTimeStats();
-			Series.Stats largeStats = generator.responseTimeLarge().stats();
-			Series.Stats smallStats = generator.responseTimeSmall().stats();
-			int nproc = generator.responseTimeSeries().length();
-			int ndrop = nreq - nproc;
-			double dropfrac = generator.totalDropFraction();
-			System.out.printf ("%.3f\t%.3f\t%.3f\t%d\t%d\t%.3f%n",
-					rate, totalStats.mean, totalStats.stddev, nproc, ndrop, 
-					dropfrac);
+			Series.Stats totalStats = gen.responseTimeStats();
+			Series.Stats largeStats = gen.responseTimeLarge().stats();
+			Series.Stats smallStats = gen.responseTimeSmall().stats();
+			System.out.printf ("%.3f\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f%n",
+					rate, totalStats.mean, largeStats.mean, smallStats.mean,
+					gen.totalDropFraction(), gen.largePacketDropFraction(),
+					gen.smallPacketDropFraction());
 			builder.append(String.format(
-					"%.3f\t%.3f\t%.3f\t%d\t%d\t%.3f%n",
-					rate, totalStats.mean, totalStats.stddev, nproc, ndrop, 
-					dropfrac));
+					"%.3f\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f%n",
+					rate, totalStats.mean, largeStats.mean, smallStats.mean,
+					gen.totalDropFraction(), gen.largePacketDropFraction(),
+					gen.smallPacketDropFraction()));
 			// Record results for plot.
 			respTimeSeries.add (rate, totalStats.mean);
 			respTimeLargeSeries.add(rate, largeStats.mean);
 			respTimeSmallSeries.add(rate, smallStats.mean);
-			dropFracSeries.add (rate, dropfrac);
-			dropFracLargeSeries.add(rate, generator.largePacketDropFraction());
-			dropFracSmallSeries.add(rate, generator.smallPacketDropFraction());
+			dropFracSeries.add (rate, gen.totalDropFraction());
+			dropFracLargeSeries.add(rate, gen.largePacketDropFraction());
+			dropFracSmallSeries.add(rate, gen.smallPacketDropFraction());
 		}
 
 		try {
