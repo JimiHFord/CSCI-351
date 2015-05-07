@@ -9,7 +9,7 @@
 import edu.rit.util.Random;
 
 /**
- * 
+ * Class provides 
  * 
  * @author Jimi Ford (jhf3617)
  * @version 5-3-2015
