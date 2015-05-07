@@ -27,18 +27,21 @@ public class Generator
 	private Simulation sim;
 	private ExponentialPrng tpktPrng;
 	private Random prng;
-	private int npkt;
+	private final int npkt;
 	private Routable source;
 	private Link link;
 	private ListSeries respTimeSeries;
-	private int n;
+	private ListSeries respTimeLargePackets;
+	private ListSeries respTimeSmallPackets;
+	private int largePackets;
+	private int smallPackets;
 
 	/**
 	 * Create a new request generator.
 	 *
 	 * @param  sim     Simulation.
-	 * @param  rpkt    Request mean rate.
-	 * @param  npkt    Number of requests.
+	 * @param  rpkt    Packet generation mean rate.
+	 * @param  npkt    Number of packets.
 	 * @param  prng    Pseudorandom number generator.
 	 * @param  source  First host in network sending the packets.
 	 */
@@ -50,7 +53,10 @@ public class Generator
 		this.source = source;
 		this.prng = prng;
 		respTimeSeries = new ListSeries();
-		n = 0;
+		respTimeLargePackets = new ListSeries();
+		respTimeSmallPackets = new ListSeries();
+		largePackets = 0;
+		smallPackets = 0;
 		this.link = link;
 		generatePacket();
 	}
@@ -59,11 +65,14 @@ public class Generator
 	 * Generate the next packet.
 	 */
 	private void generatePacket() {
+		Packet p = new Packet (prng, sim, respTimeSeries, respTimeLargePackets,
+				respTimeSmallPackets);
 		if(link.ready()) {
-			source.startSending (new Packet (prng, sim, respTimeSeries), link);
+			source.startSending (p, link);
 		}
-		++ n;
-		if (n < npkt) {
+		if(p.isLarge) ++largePackets;
+		else ++smallPackets;
+		if (totalPackets() < npkt) {
 			sim.doAfter (tpktPrng.next(), new Event() {
 				public void perform() {
 					generatePacket();
@@ -81,6 +90,33 @@ public class Generator
 	public Series responseTimeSeries() {
 		return respTimeSeries;
 	}
+	
+	/**
+	 * Returns a data series containing the response time statistics of the
+	 * larger packets
+	 *
+	 * @return  Response time series.
+	 */
+	public Series responseTimeLarge() {
+		return respTimeLargePackets;
+	}
+	
+	/**
+	 * Returns a data series containing the response time statistics of the
+	 * smaller packets.
+	 *
+	 * @return  Response time series.
+	 */
+	public Series responseTimeSmall() {
+		return respTimeSmallPackets;
+	}
+	
+	/**
+	 * Returns the total number of packets currently generated
+	 */
+	public int totalPackets() {
+		return largePackets + smallPackets;
+	}
 
 	/**
 	 * Returns the response time statistics of the generated requests.
@@ -92,9 +128,26 @@ public class Generator
 	}
 
 	/**
-	 * Returns the drop fraction of the generated requests.
+	 * Returns the drop fraction of the generated packets.
 	 */
-	public double dropFraction() {
-		return (double)(npkt - respTimeSeries.length())/(double)npkt;
+	public double totalDropFraction() {
+		return (double)(totalPackets() - respTimeSeries.length())
+				/(double)totalPackets();
+	}
+	
+	/**
+	 * Returns the drop fraction of the large packets generated
+	 */
+	public double largePacketDropFraction() {
+		return (double)(largePackets - respTimeLargePackets.length())
+				/(double)largePackets;
+	}
+	
+	/**
+	 * Returns the drop fraction of the small packets generated
+	 */
+	public double smallPacketDropFraction() {
+		return (double)(smallPackets - respTimeSmallPackets.length())
+				/(double)smallPackets;
 	}
 }

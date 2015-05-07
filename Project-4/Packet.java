@@ -31,6 +31,8 @@ public class Packet
 	 */
 	public final int id;
 	
+	public final boolean isLarge;
+	
 	// private data member
 	
 	private static int idCounter = 0;	
@@ -38,6 +40,12 @@ public class Packet
 	private double startTime;
 	private double finishTime;
 	private ListSeries respTimeSeries;
+	private ListSeries respTimeLargePackets;
+	private ListSeries respTimeSmallPackets;
+	
+	private static final int 
+		SMALL = 40 * Byte.SIZE,
+		LARGE = 576 * Byte.SIZE;
 
 
 	/**
@@ -46,14 +54,21 @@ public class Packet
 	 * @param prng a pseudorandom number generator
 	 * @param sim the current simulation object
 	 * @param series the series to keep track of response times in
+	 * @param seriesLargePackets series to keep track of large packet response
+	 * times in
+	 * @param seriesSmallPackets series to keep track of small packet response
+	 * times in
 	 */
-	public Packet(Random prng, Simulation sim, ListSeries series) {
+	public Packet(Random prng, Simulation sim, ListSeries series,
+			ListSeries seriesLargePackets, ListSeries seriesSmallPackets) {
 		this.id = ++ idCounter;
 		this.sim = sim;
 		this.startTime = sim.time();
-		this.size = prng.nextDouble() < .5 ? 
-				40 * Byte.SIZE : 576 * Byte.SIZE;
+		this.size = prng.nextDouble() < .5 ? SMALL : LARGE;
+		this.isLarge = this.size == LARGE;
 		this.respTimeSeries = series;
+		this.respTimeLargePackets = seriesLargePackets;
+		this.respTimeSmallPackets = seriesSmallPackets;
 	}
 	
 	/**
@@ -78,6 +93,8 @@ public class Packet
 	{
 		finishTime = sim.time();
 		respTimeSeries.add (responseTime());
+		if(isLarge) respTimeLargePackets.add(responseTime());
+		else respTimeSmallPackets.add(responseTime());
 	}
 
 	/**

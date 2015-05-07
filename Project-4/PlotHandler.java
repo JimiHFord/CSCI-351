@@ -29,24 +29,42 @@ import edu.rit.numeric.plot.Plot;
 public class PlotHandler {
 
 	// private data members
-	private final String responseTimeFile;
-	private final String dropFractionFile;
-	private final ListXYSeries dropFracSeries;
-	private final ListXYSeries respTimeSeries;
+	private final String rtTotalFile;
+	private final String dfTotalFile;
+	private final String rtLargeFile;
+	private final String dfLargeFile;
+	private final String rtSmallFile;
+	private final String dfSmallFile;
+	private final ListXYSeries dfTotal;
+	private final ListXYSeries rtTotal;
+	private final ListXYSeries dfLarge;
+	private final ListXYSeries rtLarge;
+	private final ListXYSeries dfSmall;
+	private final ListXYSeries rtSmall;
 	
 	/**
 	 * Construct a new PlotHandler object
 	 * 
-	 * @param plotFilePrefix the prefix to use for saving the files
-	 * @param dropFracSeries the xy-series that contains the drop fraction info
-	 * @param respTimeSeries the xy-series that contains the response time info
+	 * @param prefix the prefix to use for saving the files
+	 * @param dfTotal the xy-series that contains the drop fraction info
+	 * @param rtTotal the xy-series that contains the response time info
 	 */
-	public PlotHandler(String plotFilePrefix, ListXYSeries dropFracSeries,
-			ListXYSeries respTimeSeries) {
-		responseTimeFile = plotFilePrefix + "-traversal-time.dwg";
-		dropFractionFile = plotFilePrefix + "-drop-fraction.dwg";
-		this.dropFracSeries = dropFracSeries;
-		this.respTimeSeries = respTimeSeries;
+	public PlotHandler(String prefix, 
+		ListXYSeries dfTotal, ListXYSeries rtTotal, 
+		ListXYSeries dfLarge, ListXYSeries rtLarge, 
+		ListXYSeries dfSmall, ListXYSeries rtSmall) {
+		rtTotalFile = prefix + "-traversal-time.dwg";
+		dfTotalFile = prefix + "-drop-fraction.dwg";
+		rtLargeFile = prefix + "-traversal-time-large.dwg";
+		rtSmallFile = prefix + "-traversal-time-small.dwg";
+		dfLargeFile = prefix + "-drop-fraction-large.dwg";
+		dfSmallFile = prefix + "-drop-fraction-small.dwg";
+		this.dfTotal = dfTotal;
+		this.rtTotal = rtTotal;
+		this.dfLarge = dfLarge;
+		this.rtLarge = rtLarge;
+		this.dfSmall = dfSmall;
+		this.rtSmall = rtSmall;
 	}
 	
 	/**
@@ -55,28 +73,43 @@ public class PlotHandler {
 	 * @throws IOException if it can't write to the file specified
 	 */
 	public void write() throws IOException {
-		
-		
+		write("Total", "0.0", dfTotal, dfTotalFile, rtTotal, rtTotalFile);
+		write("Large Pkt", "0.0", dfLarge, dfLargeFile, rtLarge, rtLargeFile);
+		write("Small Pkt", "0.00", dfSmall, dfSmallFile, rtSmall, rtSmallFile);
+	}
+	
+	/**
+	 * Save the plot information into files and display the plots.
+	 * 
+	 * @param titlePrefix Prefix of the plot's title
+	 * @param df drop fraction series
+	 * @param dfFile drop fraction file name
+	 * @param rt response time series
+	 * @param rtFile response time file
+	 * @throws IOException if it fails to write to any of the specified files
+	 */
+	private void write(String titlePrefix, String yFormat, ListXYSeries df,
+			String dfFile, ListXYSeries rt, String rtFile) throws IOException {
 		Plot responseTime = new Plot()
-		.plotTitle ("Traversal Time")
+		.plotTitle (titlePrefix+" Traversal Time")
 		.xAxisTitle ("Mean arrival rate (pkt/sec)")
 		.yAxisTitle ("Mean traversal time (sec)")
-		.yAxisTickFormat (new DecimalFormat ("0.0"))
+		.yAxisTickFormat (new DecimalFormat (yFormat))
 		.seriesDots (null)
-		.xySeries (respTimeSeries);
+		.xySeries (rt);
 		Plot dropFraction = new Plot()
-		.plotTitle ("Drop Fraction")
+		.plotTitle (titlePrefix+" Drop Fraction")
 		.xAxisTitle ("Mean arrival rate (pkt/sec)")
 		.yAxisTitle ("Drop fraction")
 		.yAxisStart (0.0)
 		.yAxisEnd (1.0)
 		.yAxisTickFormat (new DecimalFormat ("0.0"))
 		.seriesDots (null)
-		.xySeries (dropFracSeries);
-		Plot.write(responseTime, new File(responseTimeFile));
-		Plot.write(dropFraction, new File(dropFractionFile));
-		responseTime.getFrame().setVisible (true);
-		dropFraction.getFrame().setVisible (true);
+		.xySeries (df);
+		Plot.write(responseTime, new File(rtFile));
+		Plot.write(dropFraction, new File(dfFile));
+//		responseTime.getFrame().setVisible (true);
+//		dropFraction.getFrame().setVisible (true);
 	}
 	
 	/**

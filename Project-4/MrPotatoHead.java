@@ -52,8 +52,12 @@ public class MrPotatoHead
 
 		// Set up plot data series.
 		ListXYSeries respTimeSeries = new ListXYSeries();
+		ListXYSeries respTimeLargeSeries = new ListXYSeries();
+		ListXYSeries respTimeSmallSeries = new ListXYSeries();
 		ListXYSeries dropFracSeries = new ListXYSeries();
-
+		ListXYSeries dropFracLargeSeries = new ListXYSeries();
+		ListXYSeries dropFracSmallSeries = new ListXYSeries();
+		
 		// Sweep mean request rate.
 		System.out.printf ("Mean\tResp\tResp%n");
 		System.out.printf ("Pkt\tTime\tTime\tPkts\tPkts\tDrop%n");
@@ -114,22 +118,32 @@ public class MrPotatoHead
 			sim.run();
 
 			// Print results.
-			Series.Stats stats = generator.responseTimeStats();
+			Series.Stats totalStats = generator.responseTimeStats();
+			Series.Stats largeStats = generator.responseTimeLarge().stats();
+			Series.Stats smallStats = generator.responseTimeSmall().stats();
 			int nproc = generator.responseTimeSeries().length();
 			int ndrop = nreq - nproc;
-			double dropfrac = (double)ndrop/(double)nreq;
+			double dropfrac = generator.totalDropFraction();
 			System.out.printf ("%.3f\t%.3f\t%.3f\t%d\t%d\t%.3f%n",
-					rate, stats.mean, stats.stddev, nproc, ndrop, dropfrac);
+					rate, totalStats.mean, totalStats.stddev, nproc, ndrop, 
+					dropfrac);
 			builder.append(String.format(
 					"%.3f\t%.3f\t%.3f\t%d\t%d\t%.3f%n",
-					rate, stats.mean, stats.stddev, nproc, ndrop, dropfrac));
+					rate, totalStats.mean, totalStats.stddev, nproc, ndrop, 
+					dropfrac));
 			// Record results for plot.
-			respTimeSeries.add (rate, stats.mean);
+			respTimeSeries.add (rate, totalStats.mean);
+			respTimeLargeSeries.add(rate, largeStats.mean);
+			respTimeSmallSeries.add(rate, smallStats.mean);
 			dropFracSeries.add (rate, dropfrac);
+			dropFracLargeSeries.add(rate, generator.largePacketDropFraction());
+			dropFracSmallSeries.add(rate, generator.smallPacketDropFraction());
 		}
 
 		try {
-			new PlotHandler(prefix, dropFracSeries, respTimeSeries).write();
+			new PlotHandler(prefix, dropFracSeries, respTimeSeries, 
+					dropFracLargeSeries, respTimeLargeSeries,
+					dropFracSmallSeries, respTimeSmallSeries).write();
 			PrintWriter tableWriter = new PrintWriter(prefix + "-table.tsv");
 			tableWriter.print(builder.toString());
 			tableWriter.close();
