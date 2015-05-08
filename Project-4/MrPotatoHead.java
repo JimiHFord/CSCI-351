@@ -25,7 +25,7 @@ public class MrPotatoHead
 	private static double rlb;
 	private static double rub;
 	private static double rdelta;
-	private static int nreq;
+	private static int npkt;
 	private static long seed;
 
 	private static Random prng;
@@ -44,7 +44,7 @@ public class MrPotatoHead
 		rub = Double.parseDouble (args[1]);
 		rdelta = Double.parseDouble (args[2]);
 		if(rlb <= 0) rlb = rdelta;
-		nreq = Integer.parseInt (args[3]);
+		npkt = Integer.parseInt (args[3]);
 		seed = Long.parseLong (args[4]);
 		prefix = args.length == 6 ? args[5] : "potato";
 		// Set up pseudorandom number generator.
@@ -57,6 +57,11 @@ public class MrPotatoHead
 		ListXYSeries dropFracSeries = new ListXYSeries();
 		ListXYSeries dropFracLargeSeries = new ListXYSeries();
 		ListXYSeries dropFracSmallSeries = new ListXYSeries();
+		
+		ListXYSeries aDrop = new ListXYSeries();
+		ListXYSeries bDrop = new ListXYSeries();
+		ListXYSeries cDrop = new ListXYSeries();
+		ListXYSeries dDrop = new ListXYSeries();
 		
 		// Sweep mean request rate.
 		System.out.printf ("Mean\tResp\tResp\tResp\tDrop\tDrop\tDrop%n");
@@ -113,7 +118,7 @@ public class MrPotatoHead
 			d.addSecondary(dc);
 
 			// Set up request generator and generate first request.
-			gen = new Generator (sim, rate, nreq, prng, h1, 
+			gen = new Generator (sim, rate, npkt, prng, h1, 
 					new Link(true, h1, a));
 
 			// Run the simulation.
@@ -139,12 +144,17 @@ public class MrPotatoHead
 			dropFracSeries.add (rate, gen.totalDropFraction());
 			dropFracLargeSeries.add(rate, gen.largePacketDropFraction());
 			dropFracSmallSeries.add(rate, gen.smallPacketDropFraction());
+			aDrop.add(rate, a.dropFraction(npkt));
+			bDrop.add(rate, b.dropFraction(npkt));
+			cDrop.add(rate, c.dropFraction(npkt));
+			dDrop.add(rate, d.dropFraction(npkt));
 		}
 
 		try {
 			new PlotHandler(prefix, dropFracSeries, respTimeSeries, 
 					dropFracLargeSeries, respTimeLargeSeries,
-					dropFracSmallSeries, respTimeSmallSeries).write();
+					dropFracSmallSeries, respTimeSmallSeries, 
+					aDrop, bDrop, cDrop, dDrop).write();
 			PrintWriter tableWriter = new PrintWriter(prefix + "-table.tsv");
 			tableWriter.print(builder.toString());
 			tableWriter.close();

@@ -6,10 +6,11 @@
 //
 //******************************************************************************
 
-import java.io.File;
+import java.awt.Color;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import edu.rit.numeric.ListXYSeries;
+import edu.rit.numeric.plot.Dots;
 import edu.rit.numeric.plot.Plot;
 
 /**
@@ -35,12 +36,17 @@ public class PlotHandler {
 	private final String dfLargeFile;
 	private final String rtSmallFile;
 	private final String dfSmallFile;
+	private final String routerDropFile;
 	private final ListXYSeries dfTotal;
 	private final ListXYSeries rtTotal;
 	private final ListXYSeries dfLarge;
 	private final ListXYSeries rtLarge;
 	private final ListXYSeries dfSmall;
 	private final ListXYSeries rtSmall;
+	private final ListXYSeries aDrop;
+	private final ListXYSeries bDrop;
+	private final ListXYSeries cDrop;
+	private final ListXYSeries dDrop;
 	
 	/**
 	 * Construct a new PlotHandler object
@@ -52,19 +58,26 @@ public class PlotHandler {
 	public PlotHandler(String prefix, 
 		ListXYSeries dfTotal, ListXYSeries rtTotal, 
 		ListXYSeries dfLarge, ListXYSeries rtLarge, 
-		ListXYSeries dfSmall, ListXYSeries rtSmall) {
+		ListXYSeries dfSmall, ListXYSeries rtSmall, 
+		ListXYSeries aDrop, ListXYSeries bDrop, ListXYSeries cDrop,
+		ListXYSeries dDrop) {
 		rtTotalFile = prefix + "-traversal-time.dwg";
 		dfTotalFile = prefix + "-drop-fraction.dwg";
 		rtLargeFile = prefix + "-traversal-time-large.dwg";
 		rtSmallFile = prefix + "-traversal-time-small.dwg";
 		dfLargeFile = prefix + "-drop-fraction-large.dwg";
 		dfSmallFile = prefix + "-drop-fraction-small.dwg";
+		routerDropFile = prefix + "-router-drop-fraction.dwg";
 		this.dfTotal = dfTotal;
 		this.rtTotal = rtTotal;
 		this.dfLarge = dfLarge;
 		this.rtLarge = rtLarge;
 		this.dfSmall = dfSmall;
 		this.rtSmall = rtSmall;
+		this.aDrop = aDrop;
+		this.bDrop = bDrop;
+		this.cDrop = cDrop;
+		this.dDrop = dDrop;
 	}
 	
 	/**
@@ -76,6 +89,37 @@ public class PlotHandler {
 		write("Total", "0.0", dfTotal, dfTotalFile, rtTotal, rtTotalFile);
 		write("Large Pkt", "0.0", dfLarge, dfLargeFile, rtLarge, rtLargeFile);
 		write("Small Pkt", "0.00", dfSmall, dfSmallFile, rtSmall, rtSmallFile);
+		writeRouter();
+	}
+	
+	private void writeRouter() throws IOException {
+		Plot routerDropFraction = new Plot()
+		.plotTitle("Router Drop Fraction")
+		.xAxisTitle ("Mean arrival rate (pkt/sec)")
+		.yAxisTitle ("Drop fraction")
+		.yAxisStart (0.0)
+		.yAxisEnd (1.0)
+		.yAxisTickFormat (new DecimalFormat ("0.0"))
+		.seriesDots(null)
+		.seriesColor(Color.RED)
+		.xySeries(aDrop)
+		.seriesColor(Color.ORANGE)
+		.seriesDots(Dots.circle(Color.ORANGE))
+		.xySeries(bDrop)
+		.seriesDots(null)
+		.seriesColor(Color.GREEN)
+		.xySeries(cDrop)
+		.seriesColor(Color.BLUE)
+		.xySeries(dDrop)
+		.labelColor(Color.RED)
+		.label("<b>A</b>", 42.5, .85)
+		.labelColor(Color.ORANGE)
+		.label("<b>B</b>", 42.5, .75)
+		.labelColor(Color.GREEN)
+		.label("<b>C</b>", 42.5, .65)
+		.labelColor(Color.BLUE)
+		.label("<b>D</b>", 42.5, .55);
+		Plot.write(routerDropFraction, routerDropFile);
 	}
 	
 	/**
@@ -107,8 +151,8 @@ public class PlotHandler {
 		.yAxisTickFormat (new DecimalFormat ("0.0"))
 		.seriesDots (null)
 		.xySeries (df);
-		Plot.write(responseTime, new File(rtFile));
-		Plot.write(dropFraction, new File(dfFile));
+		Plot.write(responseTime, rtFile);
+		Plot.write(dropFraction, dfFile);
 	}
 	
 	/**

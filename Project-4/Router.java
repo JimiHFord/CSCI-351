@@ -25,6 +25,7 @@ public class Router extends Routable {
 	
 	private final Random prng;
 	private Link primary;
+	private int dropCount;
 	private final AList<Link> secondary;
 	
 	/**
@@ -37,6 +38,7 @@ public class Router extends Routable {
 	public Router(Random prng, Simulation sim) {
 		super(sim);
 		this.prng = prng;
+		this.dropCount = 0;
 		this.secondary = new AList<Link>();
 	}
 	
@@ -75,9 +77,6 @@ public class Router extends Routable {
 		} else if(secondary.size() > 0) {
 			
 			int[] indices = ShuffleHelper.shuffledArray(prng, secondary.size());
-//			int[] indices = ShuffleHelper.array(secondary.size());
-//			ShuffleHelper.shuffleArray(prng, indices);
-			
 			for(int i = 0; i < indices.length && !goodToGo; i++) {
 				link = secondary.get(indices[i]);
 				if(link.ready()) {
@@ -89,6 +88,18 @@ public class Router extends Routable {
 			startSending(packet, link);
 		} else {
 			// drop packet
+			++dropCount;
 		}
+	}
+	
+	/**
+	 * Get the fraction of packets that this router dropped
+	 * 
+	 * @param totalPacketCount the total number of packets generated in the 
+	 * simulation
+	 * @return a number between 0 and 1
+	 */
+	public double dropFraction(int totalPacketCount) {
+		return ((double)this.dropCount)/(double)totalPacketCount;
 	}
 }
