@@ -68,6 +68,21 @@ public class MrPotatoHead
 		ListXYSeries cReRoute = new ListXYSeries();
 		ListXYSeries dReRoute = new ListXYSeries();
 		
+		ListXYSeries adActivity = new ListXYSeries();
+		ListXYSeries bdActivity = new ListXYSeries();
+		ListXYSeries cdActivity = new ListXYSeries();
+		ListXYSeries d2Activity = new ListXYSeries();
+		
+		ListXYSeries abActivity = new ListXYSeries();
+		ListXYSeries acActivity = new ListXYSeries();
+		ListXYSeries baActivity = new ListXYSeries();
+		ListXYSeries bcActivity = new ListXYSeries();
+		ListXYSeries caActivity = new ListXYSeries();
+		ListXYSeries cbActivity = new ListXYSeries();
+		ListXYSeries daActivity = new ListXYSeries();
+		ListXYSeries dbActivity = new ListXYSeries();
+		ListXYSeries dcActivity = new ListXYSeries();
+		
 		// Sweep mean request rate.
 		System.out.printf ("Mean\tResp\tResp\tResp\tDrop\tDrop\tDrop%n");
 		System.out.printf ("Pkt\tTime\tTime\tTime\tFrac\tFrac\tFrac%n");
@@ -158,6 +173,21 @@ public class MrPotatoHead
 			bReRoute.add(rate, b.reRouteFraction());
 			cReRoute.add(rate, c.reRouteFraction());
 			dReRoute.add(rate, d.reRouteFraction());
+			// primary link activity
+			adActivity.add(rate, ad.fractionClosed());
+			bdActivity.add(rate, bd.fractionClosed());
+			cdActivity.add(rate, cd.fractionClosed());
+			d2Activity.add(rate, d2.fractionClosed());
+			// secondary link activity
+			abActivity.add(rate, ab.fractionClosed());
+			acActivity.add(rate, ac.fractionClosed());
+			baActivity.add(rate, ba.fractionClosed());
+			bcActivity.add(rate, bc.fractionClosed());
+			caActivity.add(rate, ca.fractionClosed());
+			cbActivity.add(rate, cb.fractionClosed());
+			daActivity.add(rate, da.fractionClosed());
+			dbActivity.add(rate, db.fractionClosed());
+			dcActivity.add(rate, dc.fractionClosed());
 		}
 
 		try {
@@ -165,7 +195,10 @@ public class MrPotatoHead
 					dropFracLargeSeries, respTimeLargeSeries,
 					dropFracSmallSeries, respTimeSmallSeries, 
 					aDrop, bDrop, cDrop, dDrop,
-					aReRoute, bReRoute, cReRoute, dReRoute).write();
+					aReRoute, bReRoute, cReRoute, dReRoute,
+					adActivity, bdActivity, cdActivity, d2Activity,
+					abActivity, acActivity, baActivity, bcActivity, caActivity,
+					cbActivity, daActivity, dbActivity, dcActivity).write();
 			PrintWriter tableWriter = new PrintWriter(prefix + "-table.tsv");
 			tableWriter.print(builder.toString());
 			tableWriter.close();

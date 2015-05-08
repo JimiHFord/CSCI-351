@@ -38,6 +38,8 @@ public class PlotHandler {
 	private final String dfSmallFile;
 	private final String routerDropFile;
 	private final String reRouteFile;
+	private final String primaryActivityFile;
+	private final String secondaryActivityFile;
 	private final ListXYSeries dfTotal;
 	private final ListXYSeries rtTotal;
 	private final ListXYSeries dfLarge;
@@ -52,7 +54,19 @@ public class PlotHandler {
 	private final ListXYSeries bReRoute;
 	private final ListXYSeries cReRoute;
 	private final ListXYSeries dReRoute;
-	
+	private final ListXYSeries adActivity;
+	private final ListXYSeries bdActivity;
+	private final ListXYSeries cdActivity;
+	private final ListXYSeries d2Activity;
+	private final ListXYSeries abActivity;
+	private final ListXYSeries acActivity; 
+	private final ListXYSeries baActivity; 
+	private final ListXYSeries bcActivity; 
+	private final ListXYSeries caActivity;
+	private final ListXYSeries cbActivity; 
+	private final ListXYSeries daActivity;
+	private final ListXYSeries dbActivity; 
+	private final ListXYSeries dcActivity;
 	/**
 	 * Construct a new PlotHandler object
 	 * 
@@ -66,7 +80,14 @@ public class PlotHandler {
 		ListXYSeries dfSmall, ListXYSeries rtSmall, 
 		ListXYSeries aDrop, ListXYSeries bDrop, ListXYSeries cDrop,
 		ListXYSeries dDrop, ListXYSeries aReRoute, ListXYSeries bReRoute,
-		ListXYSeries cReRoute, ListXYSeries dReRoute) {
+		ListXYSeries cReRoute, ListXYSeries dReRoute, 
+		ListXYSeries adActivity, ListXYSeries bdActivity, 
+		ListXYSeries cdActivity, ListXYSeries d2Activity,
+		ListXYSeries abActivity, ListXYSeries acActivity, 
+		ListXYSeries baActivity, ListXYSeries bcActivity, 
+		ListXYSeries caActivity, ListXYSeries cbActivity, 
+		ListXYSeries daActivity, ListXYSeries dbActivity, 
+		ListXYSeries dcActivity) {
 		rtTotalFile = prefix + "-traversal-time.dwg";
 		dfTotalFile = prefix + "-drop-fraction.dwg";
 		rtLargeFile = prefix + "-traversal-time-large.dwg";
@@ -75,6 +96,9 @@ public class PlotHandler {
 		dfSmallFile = prefix + "-drop-fraction-small.dwg";
 		routerDropFile = prefix + "-router-drop-fraction.dwg";
 		reRouteFile = prefix + "-re-route-fraction.dwg";
+		primaryActivityFile = prefix + "-primary-link-activity-fraction.dwg";
+		secondaryActivityFile = prefix + 
+				"-secondary-link-activity-fraction.dwg";
 		this.dfTotal = dfTotal;
 		this.rtTotal = rtTotal;
 		this.dfLarge = dfLarge;
@@ -89,6 +113,19 @@ public class PlotHandler {
 		this.bReRoute = bReRoute;
 		this.cReRoute = cReRoute;
 		this.dReRoute = dReRoute;
+		this.adActivity = adActivity;
+		this.bdActivity = bdActivity;
+		this.cdActivity = cdActivity;
+		this.d2Activity = d2Activity;
+		this.abActivity = abActivity;
+		this.acActivity = acActivity;
+		this.baActivity = baActivity;
+		this.bcActivity = bcActivity;
+		this.caActivity = caActivity;
+		this.cbActivity = cbActivity;
+		this.daActivity = daActivity;
+		this.dbActivity = dbActivity;
+		this.dcActivity = dcActivity;
 	}
 	
 	/**
@@ -102,8 +139,11 @@ public class PlotHandler {
 		write("Small Pkt", "0.00", dfSmall, dfSmallFile, rtSmall, rtSmallFile);
 		writeRouterDrop();
 		writeRouterReRoute();
+		writePrimaryLinkActivity();
+		writeSecondaryLinkActivity();
 	}
 	
+
 	private void writeRouterDrop() throws IOException {
 		Plot routerDropFraction = new Plot()
 		.plotTitle("Router Drop Fraction")
@@ -132,6 +172,79 @@ public class PlotHandler {
 		.labelColor(Color.BLUE)
 		.label("<b>D</b>", 42.5, .55);
 		Plot.write(routerDropFraction, routerDropFile);
+	}
+	
+	private void writePrimaryLinkActivity() throws IOException {
+		Plot linkActivity = new Plot()
+		.plotTitle("Primary Link Activity")
+		.xAxisTitle ("Mean arrival rate (pkt/sec)")
+		.yAxisTitle ("Link Activity Fraction")
+		.yAxisStart (0.0)
+		.yAxisEnd (1.0)
+		.yAxisTickFormat (new DecimalFormat ("0.0"))
+		.seriesDots(null)
+		.seriesColor(Color.RED)
+		.xySeries(adActivity)
+		.seriesColor(Color.ORANGE)
+		.seriesDots(Dots.circle(Color.ORANGE))
+		.xySeries(bdActivity)
+		.seriesDots(null)
+		.seriesColor(Color.GREEN)
+		.xySeries(cdActivity)
+		.seriesColor(Color.BLUE)
+		.xySeries(d2Activity)
+		.labelColor(Color.RED)
+		.label("<b>AD</b>", 42.5, .85)
+		.labelColor(Color.ORANGE)
+		.label("<b>BD</b>", 42.5, .75)
+		.labelColor(Color.GREEN)
+		.label("<b>CD</b>", 42.5, .65)
+		.labelColor(Color.BLUE)
+		.label("<b>D2</b>", 42.5, .55);
+		Plot.write(linkActivity, primaryActivityFile);
+	}
+
+	private void writeSecondaryLinkActivity() throws IOException {
+		Plot linkActivity = new Plot()
+		.plotTitle("Secondary Link Activity")
+		.xAxisTitle ("Mean arrival rate (pkt/sec)")
+		.yAxisTitle ("Link Activity Fraction")
+		.yAxisStart (0.0)
+		.yAxisEnd (1.0)
+		.yAxisTickFormat (new DecimalFormat ("0.0"))
+		.seriesDots(null)
+		.seriesColor(Color.RED)
+		.xySeries(abActivity)
+		.seriesColor(Color.ORANGE)
+		.seriesDots(Dots.circle(Color.ORANGE))
+		.xySeries(acActivity)
+		.seriesDots(null)
+		.seriesColor(Color.GREEN)
+		.xySeries(baActivity)
+		.seriesColor(Color.BLUE)
+		.xySeries(bcActivity)
+		.seriesDots(null)
+		.seriesColor(Color.RED)
+		.xySeries(caActivity)
+		.seriesColor(Color.ORANGE)
+		.seriesDots(Dots.circle(Color.ORANGE))
+		.xySeries(cbActivity)
+		.seriesDots(null)
+		.seriesColor(Color.GREEN)
+		.xySeries(daActivity)
+		.seriesColor(Color.BLUE)
+		.xySeries(dbActivity)
+		.seriesColor(Color.BLUE)
+		.xySeries(dcActivity)
+		.labelColor(Color.RED)
+		.label("<b>AD</b>", 42.5, .85)
+		.labelColor(Color.ORANGE)
+		.label("<b>BD</b>", 42.5, .75)
+		.labelColor(Color.GREEN)
+		.label("<b>CD</b>", 42.5, .65)
+		.labelColor(Color.BLUE)
+		.label("<b>D2</b>", 42.5, .55);
+		Plot.write(linkActivity, secondaryActivityFile);
 	}
 	
 	private void writeRouterReRoute() throws IOException {
