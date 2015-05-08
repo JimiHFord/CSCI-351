@@ -63,6 +63,11 @@ public class MrPotatoHead
 		ListXYSeries cDrop = new ListXYSeries();
 		ListXYSeries dDrop = new ListXYSeries();
 		
+		ListXYSeries aReRoute = new ListXYSeries();
+		ListXYSeries bReRoute = new ListXYSeries();
+		ListXYSeries cReRoute = new ListXYSeries();
+		ListXYSeries dReRoute = new ListXYSeries();
+		
 		// Sweep mean request rate.
 		System.out.printf ("Mean\tResp\tResp\tResp\tDrop\tDrop\tDrop%n");
 		System.out.printf ("Pkt\tTime\tTime\tTime\tFrac\tFrac\tFrac%n");
@@ -148,13 +153,18 @@ public class MrPotatoHead
 			bDrop.add(rate, b.dropFraction(npkt));
 			cDrop.add(rate, c.dropFraction(npkt));
 			dDrop.add(rate, d.dropFraction(npkt));
+			aReRoute.add(rate, a.reRouteFraction());
+			bReRoute.add(rate, b.reRouteFraction());
+			cReRoute.add(rate, c.reRouteFraction());
+			dReRoute.add(rate, d.reRouteFraction());
 		}
 
 		try {
 			new PlotHandler(prefix, dropFracSeries, respTimeSeries, 
 					dropFracLargeSeries, respTimeLargeSeries,
 					dropFracSmallSeries, respTimeSmallSeries, 
-					aDrop, bDrop, cDrop, dDrop).write();
+					aDrop, bDrop, cDrop, dDrop,
+					aReRoute, bReRoute, cReRoute, dReRoute).write();
 			PrintWriter tableWriter = new PrintWriter(prefix + "-table.tsv");
 			tableWriter.print(builder.toString());
 			tableWriter.close();

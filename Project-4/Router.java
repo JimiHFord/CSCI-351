@@ -26,6 +26,8 @@ public class Router extends Routable {
 	private final Random prng;
 	private Link primary;
 	private int dropCount;
+	private int receiveCount;
+	private int reRouteCount;
 	private final AList<Link> secondary;
 	
 	/**
@@ -39,6 +41,8 @@ public class Router extends Routable {
 		super(sim);
 		this.prng = prng;
 		this.dropCount = 0;
+		this.receiveCount = 0;
+		this.reRouteCount = 0;
 		this.secondary = new AList<Link>();
 	}
 	
@@ -70,6 +74,7 @@ public class Router extends Routable {
 	public void receivePacket(final Packet packet, final Link l) {
 		l.open();
 		Link link = null;
+		++receiveCount;
 		boolean goodToGo = false;
 		if(primary.ready()) {
 			goodToGo = true;
@@ -81,6 +86,7 @@ public class Router extends Routable {
 				link = secondary.get(indices[i]);
 				if(link.ready()) {
 					goodToGo = true;
+					++reRouteCount;
 				}
 			}
 		}
@@ -101,5 +107,14 @@ public class Router extends Routable {
 	 */
 	public double dropFraction(int totalPacketCount) {
 		return ((double)this.dropCount)/(double)totalPacketCount;
+	}
+	
+	/**
+	 * Get the fraction of the packets that the router had to re-route along 
+	 * a secondary route
+	 */
+	public double reRouteFraction() {
+		return receiveCount == 0 ? 0 :
+			((double)reRouteCount)/(double)receiveCount;
 	}
 }
