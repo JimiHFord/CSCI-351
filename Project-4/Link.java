@@ -1,3 +1,5 @@
+import edu.rit.sim.Simulation;
+
 //******************************************************************************
 //
 // File:    Link.java
@@ -36,6 +38,10 @@ public class Link {
 	
 	private final Routable r1;
 	private final Routable r2;
+	private final Simulation sim;
+	private double closeStarted;
+	private double closeFinished;
+	private double totalTimeSpentClosed;
 	private boolean ready;
 	
 	
@@ -45,8 +51,8 @@ public class Link {
 	 * @param r1 one of the routable objects
 	 * @param r2 the other routable object
 	 */
-	public Link(Routable r1, Routable r2) {
-		this(false, r1, r2);
+	public Link(Simulation sim, Routable r1, Routable r2) {
+		this(sim, false, r1, r2);
 	}
 	
 	/**
@@ -57,13 +63,16 @@ public class Link {
 	 * @param r1 one of the routable objects
 	 * @param r2 the other routable object
 	 */
-	public Link(boolean infiniteBitRate, Routable r1, Routable r2) {
+	public Link(Simulation sim, boolean infiniteBitRate, Routable r1, 
+			Routable r2) {
+		this.sim = sim;
 		this.r1 = r1;
 		this.r2 = r2;
 		this.ready = true;
 		this.infiniteBitRate = infiniteBitRate;
 		this.bitRate = infiniteBitRate ? Double.POSITIVE_INFINITY : 
 			DEFAULT_BIT_RATE;
+		this.totalTimeSpentClosed = 0;
 	}
 	
 	/**
@@ -101,6 +110,7 @@ public class Link {
 				throw new IllegalStateException();
 			}
 			this.ready = false;
+			this.closeStarted = sim.time();
 		} 
 	}
 	
@@ -109,5 +119,15 @@ public class Link {
 	 */
 	public void open() {
 		this.ready = true;
+		this.closeFinished = sim.time();
+		this.totalTimeSpentClosed += (this.closeFinished - this.closeStarted);
+	}
+	
+	/**
+	 * Return the amount of time this link was closed as a fraction of the 
+	 * total amount of time in the simulation.
+	 */
+	public double fractionClosed() {
+		return this.totalTimeSpentClosed / sim.time();
 	}
 }
