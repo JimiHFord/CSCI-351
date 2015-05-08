@@ -37,6 +37,7 @@ public class PlotHandler {
 	private final String rtSmallFile;
 	private final String dfSmallFile;
 	private final String routerDropFile;
+	private final String reRouteFile;
 	private final ListXYSeries dfTotal;
 	private final ListXYSeries rtTotal;
 	private final ListXYSeries dfLarge;
@@ -47,6 +48,10 @@ public class PlotHandler {
 	private final ListXYSeries bDrop;
 	private final ListXYSeries cDrop;
 	private final ListXYSeries dDrop;
+	private final ListXYSeries aReRoute;
+	private final ListXYSeries bReRoute;
+	private final ListXYSeries cReRoute;
+	private final ListXYSeries dReRoute;
 	
 	/**
 	 * Construct a new PlotHandler object
@@ -60,7 +65,8 @@ public class PlotHandler {
 		ListXYSeries dfLarge, ListXYSeries rtLarge, 
 		ListXYSeries dfSmall, ListXYSeries rtSmall, 
 		ListXYSeries aDrop, ListXYSeries bDrop, ListXYSeries cDrop,
-		ListXYSeries dDrop) {
+		ListXYSeries dDrop, ListXYSeries aReRoute, ListXYSeries bReRoute,
+		ListXYSeries cReRoute, ListXYSeries dReRoute) {
 		rtTotalFile = prefix + "-traversal-time.dwg";
 		dfTotalFile = prefix + "-drop-fraction.dwg";
 		rtLargeFile = prefix + "-traversal-time-large.dwg";
@@ -68,6 +74,7 @@ public class PlotHandler {
 		dfLargeFile = prefix + "-drop-fraction-large.dwg";
 		dfSmallFile = prefix + "-drop-fraction-small.dwg";
 		routerDropFile = prefix + "-router-drop-fraction.dwg";
+		reRouteFile = prefix + "-re-route-fraction.dwg";
 		this.dfTotal = dfTotal;
 		this.rtTotal = rtTotal;
 		this.dfLarge = dfLarge;
@@ -78,6 +85,10 @@ public class PlotHandler {
 		this.bDrop = bDrop;
 		this.cDrop = cDrop;
 		this.dDrop = dDrop;
+		this.aReRoute = aReRoute;
+		this.bReRoute = bReRoute;
+		this.cReRoute = cReRoute;
+		this.dReRoute = dReRoute;
 	}
 	
 	/**
@@ -89,10 +100,11 @@ public class PlotHandler {
 		write("Total", "0.0", dfTotal, dfTotalFile, rtTotal, rtTotalFile);
 		write("Large Pkt", "0.0", dfLarge, dfLargeFile, rtLarge, rtLargeFile);
 		write("Small Pkt", "0.00", dfSmall, dfSmallFile, rtSmall, rtSmallFile);
-		writeRouter();
+		writeRouterDrop();
+		writeRouterReRoute();
 	}
 	
-	private void writeRouter() throws IOException {
+	private void writeRouterDrop() throws IOException {
 		Plot routerDropFraction = new Plot()
 		.plotTitle("Router Drop Fraction")
 		.xAxisTitle ("Mean arrival rate (pkt/sec)")
@@ -120,6 +132,36 @@ public class PlotHandler {
 		.labelColor(Color.BLUE)
 		.label("<b>D</b>", 42.5, .55);
 		Plot.write(routerDropFraction, routerDropFile);
+	}
+	
+	private void writeRouterReRoute() throws IOException {
+		Plot reRouteFraction = new Plot()
+		.plotTitle("Router Re-Route Fraction")
+		.xAxisTitle ("Mean arrival rate (pkt/sec)")
+		.yAxisTitle ("Re-Route fraction")
+		.yAxisStart (0.0)
+		.yAxisEnd (1.0)
+		.yAxisTickFormat (new DecimalFormat ("0.0"))
+		.seriesDots(null)
+		.seriesColor(Color.RED)
+		.xySeries(aReRoute)
+		.seriesColor(Color.ORANGE)
+		.seriesDots(Dots.circle(Color.ORANGE))
+		.xySeries(bReRoute)
+		.seriesDots(null)
+		.seriesColor(Color.GREEN)
+		.xySeries(cReRoute)
+		.seriesColor(Color.BLUE)
+		.xySeries(dReRoute)
+		.labelColor(Color.RED)
+		.label("<b>A</b>", 42.5, .95)
+		.labelColor(Color.ORANGE)
+		.label("<b>B</b>", 42.5, .85)
+		.labelColor(Color.GREEN)
+		.label("<b>C</b>", 42.5, .75)
+		.labelColor(Color.BLUE)
+		.label("<b>D</b>", 42.5, .65);
+		Plot.write(reRouteFraction, reRouteFile);
 	}
 	
 	/**
