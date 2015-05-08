@@ -94,23 +94,24 @@ public class MrPotatoHead
 			b = new Router(prng, sim);
 			c = new Router(prng, sim);
 			Link 
-				ab = new Link(a, b), 
-				ac = new Link(a, c),
-				ad = new Link(a, d),
-				ba = new Link(b, a),
-				bc = new Link(b, c),
-				bd = new Link(b, d),
-				ca = new Link(c, a),
-				cb = new Link(c, b),
-				cd = new Link(c, d),
-				da = new Link(d, a),
-				db = new Link(d, b),
-				dc = new Link(d, c);
+				ab = new Link(sim, a, b), 
+				ac = new Link(sim, a, c),
+				ad = new Link(sim, a, d),
+				ba = new Link(sim, b, a),
+				bc = new Link(sim, b, c),
+				bd = new Link(sim, b, d),
+				ca = new Link(sim, c, a),
+				cb = new Link(sim, c, b),
+				cd = new Link(sim, c, d),
+				da = new Link(sim, d, a),
+				db = new Link(sim, d, b),
+				dc = new Link(sim, d, c),
+				d2 = new Link(sim, d, h2);
 			// preferred link
 			a.setPrimary(ad);
 			b.setPrimary(bd);
 			c.setPrimary(cd);
-			d.setPrimary(new Link(d, h2));
+			d.setPrimary(d2);
 			// secondary links
 			a.addSecondary(ab);
 			a.addSecondary(ac);
@@ -124,7 +125,7 @@ public class MrPotatoHead
 
 			// Set up request generator and generate first request.
 			gen = new Generator (sim, rate, npkt, prng, h1, 
-					new Link(true, h1, a));
+					new Link(sim, true, h1, a));
 
 			// Run the simulation.
 			sim.run();
