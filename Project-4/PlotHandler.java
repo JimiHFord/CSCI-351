@@ -6,9 +6,11 @@
 //
 //******************************************************************************
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.io.IOException;
 import java.text.DecimalFormat;
+
 import edu.rit.numeric.ListXYSeries;
 import edu.rit.numeric.plot.Dots;
 import edu.rit.numeric.plot.Plot;
@@ -156,7 +158,7 @@ public class PlotHandler {
 	}
 	
 	/**
-	 * Save the plot information into a file and display the plots.
+	 * Save the plot information into files and display the plots.
 	 * 
 	 * @throws IOException if it can't write to the file specified
 	 */
@@ -187,7 +189,8 @@ public class PlotHandler {
 		.seriesColor(Color.RED)
 		.xySeries(aDrop)
 		.seriesColor(Color.ORANGE)
-		.seriesDots(Dots.circle(Color.ORANGE))
+		.seriesDots(Dots.circle(Color.ORANGE, new BasicStroke(), 
+				Color.ORANGE, 7))
 		.xySeries(bDrop)
 		.seriesDots(null)
 		.seriesColor(Color.GREEN)
@@ -221,7 +224,8 @@ public class PlotHandler {
 		.seriesColor(Color.RED)
 		.xySeries(adActivity)
 		.seriesColor(Color.ORANGE)
-		.seriesDots(Dots.circle(Color.ORANGE))
+		.seriesDots(Dots.circle(Color.ORANGE, new BasicStroke(), 
+				Color.ORANGE, 7))
 		.xySeries(bdActivity)
 		.seriesDots(null)
 		.seriesColor(Color.GREEN)
@@ -229,13 +233,13 @@ public class PlotHandler {
 		.seriesColor(Color.BLUE)
 		.xySeries(d2Activity)
 		.labelColor(Color.RED)
-		.label("<b>AD</b>", 42.5, .85)
+		.label("<b>A</b>", 42.5, .65)
 		.labelColor(Color.ORANGE)
-		.label("<b>BD</b>", 42.5, .75)
+		.label("<b>B</b>", 42.5, .55)
 		.labelColor(Color.GREEN)
-		.label("<b>CD</b>", 42.5, .65)
+		.label("<b>C</b>", 42.5, .45)
 		.labelColor(Color.BLUE)
-		.label("<b>D2</b>", 42.5, .55);
+		.label("<b>D</b>", 42.5, .35);
 		Plot.write(linkActivity, primaryActivityFile);
 	}
 
@@ -254,33 +258,28 @@ public class PlotHandler {
 		.seriesDots(null)
 		.seriesColor(Color.RED)
 		.xySeries(abActivity)
-		.seriesColor(Color.ORANGE)
 		.xySeries(acActivity)
-		.seriesDots(null)
-		.seriesColor(Color.YELLOW)
+		.seriesColor(Color.ORANGE)
+		.seriesDots(Dots.circle(Color.ORANGE, new BasicStroke(), 
+				Color.ORANGE, 7))
+		.xySeries(bcActivity)
 		.xySeries(baActivity)
 		.seriesColor(Color.GREEN)
-		.xySeries(bcActivity)
 		.seriesDots(null)
-		.seriesColor(Color.BLUE)
 		.xySeries(caActivity)
-		.seriesColor(Color.MAGENTA)
 		.xySeries(cbActivity)
-		.seriesDots(null)
-		.seriesColor(Color.CYAN)
+		.seriesColor(Color.BLUE)
 		.xySeries(daActivity)
-		.seriesColor(Color.BLUE)
 		.xySeries(dbActivity)
-		.seriesColor(Color.BLUE)
 		.xySeries(dcActivity)
 		.labelColor(Color.RED)
-		.label("<b>AD</b>", 42.5, .85)
+		.label("<b>A</b>", 42.5, .45)
 		.labelColor(Color.ORANGE)
-		.label("<b>BD</b>", 42.5, .75)
+		.label("<b>B</b>", 42.5, .35)
 		.labelColor(Color.GREEN)
-		.label("<b>CD</b>", 42.5, .65)
+		.label("<b>C</b>", 42.5, .25)
 		.labelColor(Color.BLUE)
-		.label("<b>D2</b>", 42.5, .55);
+		.label("<b>D</b>", 42.5, .15);
 		Plot.write(linkActivity, secondaryActivityFile);
 	}
 	
@@ -301,7 +300,8 @@ public class PlotHandler {
 		.seriesColor(Color.RED)
 		.xySeries(aReRoute)
 		.seriesColor(Color.ORANGE)
-		.seriesDots(Dots.circle(Color.ORANGE))
+		.seriesDots(Dots.circle(Color.ORANGE, new BasicStroke(), 
+				Color.ORANGE, 7))
 		.xySeries(bReRoute)
 		.seriesDots(null)
 		.seriesColor(Color.GREEN)
@@ -309,13 +309,13 @@ public class PlotHandler {
 		.seriesColor(Color.BLUE)
 		.xySeries(dReRoute)
 		.labelColor(Color.RED)
-		.label("<b>A</b>", 42.5, .95)
+		.label("<b>A</b>", 42.5, .55)
 		.labelColor(Color.ORANGE)
-		.label("<b>B</b>", 42.5, .85)
+		.label("<b>B</b>", 42.5, .45)
 		.labelColor(Color.GREEN)
-		.label("<b>C</b>", 42.5, .75)
+		.label("<b>C</b>", 42.5, .35)
 		.labelColor(Color.BLUE)
-		.label("<b>D</b>", 42.5, .65);
+		.label("<b>D</b>", 42.5, .25);
 		Plot.write(reRouteFraction, reRouteFile);
 	}
 	

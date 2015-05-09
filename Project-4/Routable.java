@@ -11,7 +11,8 @@ import edu.rit.sim.Simulation;
 
 /**
  * Class Routable is the abstract base class that defines objects that contain
- * routing logic with the ability to be linked together.
+ * routing logic with the ability to be linked together. Known implementations
+ * include Router and Host. 
  * 
  * @author Jimi Ford (jhf3617)
  * @version 5-6-2015
@@ -20,6 +21,9 @@ public abstract class Routable {
 
 	private static int count = 0;
 	
+	/**
+	 * the simulation reference
+	 */
 	protected final Simulation sim;
 	private final int id;
 	

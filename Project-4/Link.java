@@ -1,5 +1,3 @@
-import edu.rit.sim.Simulation;
-
 //******************************************************************************
 //
 // File:    Link.java
@@ -7,6 +5,8 @@ import edu.rit.sim.Simulation;
 // Unit:    Class Link
 //
 //******************************************************************************
+
+import edu.rit.sim.Simulation;
 
 /**
  * Class Link represents a connection between two routable objects. Links are
@@ -48,6 +48,7 @@ public class Link {
 	/**
 	 * construct a link with the default finit bit rate between two routables
 	 * 
+	 * @param sim the simulation reference
 	 * @param r1 one of the routable objects
 	 * @param r2 the other routable object
 	 */
@@ -58,6 +59,7 @@ public class Link {
 	/**
 	 * construct a link with specified finite or infinite bit rate
 	 * 
+	 * @param sim the simulation reference
 	 * @param infiniteBitRate set to true for infinite bit rate, false for 
 	 * default finite bit rate
 	 * @param r1 one of the routable objects
