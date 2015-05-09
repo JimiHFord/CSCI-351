@@ -67,12 +67,39 @@ public class PlotHandler {
 	private final ListXYSeries daActivity;
 	private final ListXYSeries dbActivity; 
 	private final ListXYSeries dcActivity;
+	
+
 	/**
 	 * Construct a new PlotHandler object
 	 * 
 	 * @param prefix the prefix to use for saving the files
 	 * @param dfTotal the xy-series that contains the drop fraction info
 	 * @param rtTotal the xy-series that contains the response time info
+	 * @param dfLarge series containing the drop fraction for large packets
+	 * @param rtLarge series containing the response time for large packets
+	 * @param dfSmall series containing the drop fraction for small packets
+	 * @param rtSmall series containing the response time for small packets
+	 * @param aDrop series containing the drop fraction of router a
+	 * @param bDrop series containing the drop fraction of router b
+	 * @param cDrop series containing the drop fraction of router c
+	 * @param dDrop series containing the drop fraction of router d
+	 * @param aReRoute series containing the re-route fraction of router a
+	 * @param bReRoute series containing the re-route fraction of router b
+	 * @param cReRoute series containing the re-route fraction of router c
+	 * @param dReRoute series containing the re-route fraction of router d
+	 * @param adActivity series containing activity fraction of link ad
+	 * @param bdActivity series containing activity fraction of link bd
+	 * @param cdActivity series containing activity fraction of link cd
+	 * @param d2Activity series containing activity fraction of link d2
+	 * @param abActivity series containing activity fraction of link ab
+	 * @param acActivity series containing activity fraction of link ac
+	 * @param baActivity series containing activity fraction of link ba
+	 * @param bcActivity series containing activity fraction of link bc
+	 * @param caActivity series containing activity fraction of link ca
+	 * @param cbActivity series containing activity fraction of link cb
+	 * @param daActivity series containing activity fraction of link da
+	 * @param dbActivity series containing activity fraction of link db
+	 * @param dcActivity series containing activity fraction of link dc
 	 */
 	public PlotHandler(String prefix, 
 		ListXYSeries dfTotal, ListXYSeries rtTotal, 
@@ -144,6 +171,10 @@ public class PlotHandler {
 	}
 	
 
+	/**
+	 * write the router drop fraction plot
+	 * @throws IOException if it can't write to the file specified
+	 */
 	private void writeRouterDrop() throws IOException {
 		Plot routerDropFraction = new Plot()
 		.plotTitle("Router Drop Fraction")
@@ -174,6 +205,10 @@ public class PlotHandler {
 		Plot.write(routerDropFraction, routerDropFile);
 	}
 	
+	/**
+	 * write the primary link activity plot
+	 * @throws IOException if it can't write to the file specified
+	 */
 	private void writePrimaryLinkActivity() throws IOException {
 		Plot linkActivity = new Plot()
 		.plotTitle("Primary Link Activity")
@@ -204,6 +239,10 @@ public class PlotHandler {
 		Plot.write(linkActivity, primaryActivityFile);
 	}
 
+	/**
+	 * write the secondary link activity plot
+	 * @throws IOException if it can't write to the file specified
+	 */
 	private void writeSecondaryLinkActivity() throws IOException {
 		Plot linkActivity = new Plot()
 		.plotTitle("Secondary Link Activity")
@@ -245,6 +284,11 @@ public class PlotHandler {
 		Plot.write(linkActivity, secondaryActivityFile);
 	}
 	
+	/**
+	 * write the router re-route fraction plot 
+	 * 
+	 * @throws IOException if it can't write to the file specified
+	 */
 	private void writeRouterReRoute() throws IOException {
 		Plot reRouteFraction = new Plot()
 		.plotTitle("Router Re-Route Fraction")
