@@ -48,7 +48,7 @@ public class ShuffleHelper {
 	}
 	
 	/**
-	 * Create a shuffled array with <I>size</I> elements raning from 0 to
+	 * Create a shuffled array with <I>size</I> elements ranging from 0 to
 	 * <I>size - 1</I>.
 	 * 
 	 * @param prng pseudorandom number generator used for shuffling

@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Class MrPotatoHead is the hot potato simulation main program.
+ * Class MrPotatoHead is the hot potato simulation main program. It simulates
+ * a network in which routers use hot potato routing and uses Prof. Alan
+ * Kaminsky's pj2 library to aid in this discrete event simulation.
  *
  * @author  Alan Kaminsky
  * @author Jimi Ford (jhf3617)
@@ -35,6 +37,8 @@ public class MrPotatoHead
 
 	/**
 	 * Main program to simulate hot-potato routing
+	 * 
+	 * @param args command line arguments
 	 */
 	public static void main(String[] args)
 	{

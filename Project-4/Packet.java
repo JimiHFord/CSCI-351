@@ -13,7 +13,9 @@ import edu.rit.util.Random;
 /**
  * Class Packet provides a packet model in the web simulation. It contains the
  * logic necessary to determine the size of the packet and the amount of time
- * it would take to transmit along a link.
+ * it would take to transmit along a link. It also reports to several instances
+ * of ListSeries objects that keep track of the response time of packets based
+ * on their size.
  *
  * @author  Alan Kaminsky
  * @author Jimi Ford (jhf3617)
@@ -31,6 +33,9 @@ public class Packet
 	 */
 	public final int id;
 	
+	/**
+	 * true if this packet is 576 bytes, false otherwise
+	 */
 	public final boolean isLarge;
 	
 	// private data member
